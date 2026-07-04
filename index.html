@@ -30,13 +30,6 @@
       font-size: 16px;
       line-height: 1.6;
     }
-    .empty {
-      border: 1px solid #ded6c4;
-      border-radius: 12px;
-      background: #fffaf0;
-      padding: 18px;
-      line-height: 1.6;
-    }
     .list {
       display: grid;
       gap: 12px;
@@ -44,7 +37,7 @@
     a.book {
       display: block;
       padding: 18px;
-      border-radius: 12px;
+      border-radius: 8px;
       background: #fff;
       color: inherit;
       text-decoration: none;
@@ -53,14 +46,23 @@
     a.book:active {
       transform: scale(0.99);
     }
+    .date {
+      display: block;
+      margin-top: 6px;
+      color: #706a5f;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
   <main>
     <h1>豆豆科普绘本</h1>
-    <p>这里是每日亲子录音生成的绘本入口。每本绘本会放在日期目录中，iPad 横屏打开后可以一页一页共读。</p>
-    <div class="empty">
-      还没有发布到这个入口的绘本。后续自动化会把每天的绘本目录链接追加到这里。
+    <p>这里是每日亲子录音生成的绘本入口。每本绘本都可以在 iPad 横屏下一页一页共读。</p>
+    <div class="list">
+      <a class="book" href="2026-07-04/">
+        病毒小船不要换嘴巴
+        <span class="date">2026-07-04</span>
+      </a>
     </div>
   </main>
 </body>
