@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>三格小窗里的勇气</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: #17140f;
+      color: #fff8ea;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, #3a3024 0, #17140f 48%, #0d0b08 100%);
+    }
+    main {
+      width: min(100vw, 1180px);
+      padding: 14px;
+    }
+    .stage {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      width: 100%;
+      max-height: calc(100vh - 84px);
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #000;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .45);
+    }
+    .page {
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    .page img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .caption {
+      position: absolute;
+      left: 4%;
+      right: 4%;
+      bottom: 4%;
+      padding: .62em .85em;
+      border-radius: 8px;
+      background: rgba(20, 15, 10, .64);
+      color: #fff8ea;
+      font-size: clamp(14px, 2.05vw, 25px);
+      line-height: 1.42;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, .9);
+      backdrop-filter: blur(3px);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 12px;
+    }
+    button {
+      min-width: 96px;
+      min-height: 42px;
+      border: 0;
+      border-radius: 8px;
+      background: #fff8ea;
+      color: #2a2118;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+    .count {
+      color: #efe5d3;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="三格小窗里的勇气">
+      <article class="page active">
+        <img src="page-01.png" alt="阿栗拖着湿雨靴回到洞口，栗爸爸递来毛巾。">
+        <div class="caption">雨停以后，小刺猬阿栗拖着湿漉漉的小雨靴回到洞口，背上的小刺还挂着亮晶晶的水珠。栗爸爸递来毛巾：“先把身体擦暖，慢慢说，今天的小路发生了什么呢？”</div>
+      </article>
+      <article class="page">
+        <img src="page-02.png" alt="阿栗在温暖的家里低头说起被老师批评。">
+        <div class="caption">阿栗低头搓着袖口，小声说：“云朵花园里，猫头鹰老师批评我了。”他说到这里，声音像钻进壳里的小栗子，再也滚不出来。</div>
+      </article>
+      <article class="page">
+        <img src="page-03.png" alt="栗爸爸拿出写着三个问题的小纸窗。">
+        <div class="caption">栗爸爸没有马上问“你错了吗”，也没有说“老师一定不对”。他拿出一张三格小纸窗：第一格写“发生了什么”，第二格写“老师说了什么”，第三格写“我感觉什么”。</div>
+      </article>
+      <article class="page">
+        <img src="page-04.png" alt="阿栗在第一格画水沟和湿袜子。">
+        <div class="caption">阿栗想了想，在第一格画了一条水沟和一只湿袜子。“我跑过水沟，袜子湿了，可我没有告诉老师，因为我有点不好意思。”</div>
+      </article>
+      <article class="page">
+        <img src="page-05.png" alt="阿栗画下猫头鹰老师和飘落的小叶子。">
+        <div class="caption">第二格里，阿栗画了一只猫头鹰老师，旁边飘着一片小叶子。“老师说，湿袜子要告诉大人，不能一直捂在脚上。”阿栗眨眨眼，“她的声音有点大。”</div>
+      </article>
+      <article class="page">
+        <img src="page-06.png" alt="阿栗在第三格画一颗皱巴巴的心。">
+        <div class="caption">第三格最难画，阿栗把铅笔停了很久，最后画了一颗皱巴巴的心。“我不是想做坏事，”他说，“我只是怕大家都看见我的湿袜子。”</div>
+      </article>
+      <article class="page">
+        <img src="page-07.png" alt="栗爸爸把三格小窗放到灯下，和阿栗一起商量明天。">
+        <div class="caption">栗爸爸把三格小窗放到灯下：“如果老师提醒的是对的，我们明天练一句话；如果老师误会了，爸爸会陪你去问清楚。”阿栗抬起头：“那我不是一个人去问吗？”</div>
+      </article>
+      <article class="page">
+        <img src="page-08.png" alt="阿栗对着布偶老师练习求助。">
+        <div class="caption">他们对着布偶老师练习，阿栗先只说出两个字：“帮我。”第二遍，他吸了一口气，说完整了：“老师，我袜子湿了，请帮我。”</div>
+      </article>
+      <article class="page">
+        <img src="page-09.png" alt="阿栗睡前把三格小窗和干净袜子放进小书包。">
+        <div class="caption">睡觉前，阿栗把三格小窗夹进小书包，旁边还放了一双干净袜子。他摸摸那颗皱巴巴的心，发现它好像被灯光熨平了一点点。</div>
+      </article>
+      <article class="page">
+        <img src="page-10.png" alt="栗爸爸守在门外，阿栗在被窝里回答明天会求助。">
+        <div class="caption">栗爸爸在门外轻轻说：“我就在这里，想起来什么，明天也可以告诉我。”阿栗钻进被窝，小声回答：“明天如果袜子湿了，我先找老师，再回家讲给你听。”</div>
+      </article>
+    </section>
+    <nav class="nav" aria-label="翻页">
+      <button id="prev" type="button">上一页</button>
+      <span class="count"><span id="current">1</span> / 10</span>
+      <button id="next" type="button">下一页</button>
+    </nav>
+  </main>
+  <script>
+    const pages = Array.from(document.querySelectorAll(".page"));
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const current = document.getElementById("current");
+    let index = 0;
+
+    function render() {
+      pages.forEach((page, pageIndex) => page.classList.toggle("active", pageIndex === index));
+      current.textContent = String(index + 1);
+      prev.disabled = index === 0;
+      next.disabled = index === pages.length - 1;
+    }
+
+    prev.addEventListener("click", () => {
+      index = Math.max(0, index - 1);
+      render();
+    });
+    next.addEventListener("click", () => {
+      index = Math.min(pages.length - 1, index + 1);
+      render();
+    });
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") prev.click();
+      if (event.key === "ArrowRight" || event.key === " ") next.click();
+    });
+    render();
+  </script>
+</body>
+</html>
