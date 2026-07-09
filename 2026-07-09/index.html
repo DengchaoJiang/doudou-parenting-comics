@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小洛和转不圆的六轮车</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: #15130f;
+      color: #fff7e6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #31251a 0%, #14100c 100%);
+    }
+    main {
+      width: min(100vw, 1180px);
+      padding: 14px;
+    }
+    .stage {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      width: 100%;
+      max-height: calc(100vh - 84px);
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #000;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .45);
+    }
+    .page {
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    .page img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 12px;
+    }
+    button {
+      min-width: 96px;
+      min-height: 42px;
+      border: 0;
+      border-radius: 8px;
+      background: #fff7e6;
+      color: #21170f;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+    .count {
+      color: #f5e7cf;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="小洛和转不圆的六轮车">
+      <article class="page active">
+        <img src="page-01.png" alt="傍晚的桌面像一座小小车厂，小洛把彩色木块排成一辆六轮车。他摸摸空着的位置，小声说：还差一个轮架，它会不会永远开不动？">
+      </article>
+      <article class="page">
+        <img src="page-02.png" alt="洛爸爸蹲下来，没有马上替他装好，只把小盒子推到灯光里。我们先当工程师，爸爸说，一人找一边，找到相像的零件就放到这里。">
+      </article>
+      <article class="page">
+        <img src="page-03.png" alt="小洛趴在地毯边，听见木块轻轻碰撞，像小雨点敲在车厂屋顶。他忽然举起一枚黄色小架子：这个有两个小耳朵，像不像它的兄弟？">
+      </article>
+      <article class="page">
+        <img src="page-04.png" alt="第一个轮架装上去了，车身却歪了一点点。小洛皱起眉头，手指已经想把整辆车拆掉，爸爸轻轻按住车尾：先别全拆，我们只改一个地方。">
+      </article>
+      <article class="page">
+        <img src="page-05.png" alt="他们把轮子换到旁边的小孔，车轮咔哒一声坐稳了。小洛推了一下，前面的轮子转得圆圆的，后面的轮子却像打了个小喷嚏，卡住了。">
+      </article>
+      <article class="page">
+        <img src="page-06.png" alt="它还是不听话！小洛的声音鼓起来。爸爸说：你很想一次成功，所以有点急。急可以说出来，手先停一停，眼睛帮我们看问题。">
+      </article>
+      <article class="page">
+        <img src="page-07.png" alt="小洛趴得更低，看见后轮旁边挤着一块太厚的垫片。他吸了一口气，把垫片换成薄薄的一片，又把车身轻轻放平。">
+      </article>
+      <article class="page">
+        <img src="page-08.png" alt="这一次，五个轮子都跑起来了，最后一个轮子还是慢半拍。小洛没有哭，他摸摸车顶说：它今天像一辆有点累的车，可它已经能去车站了。">
+      </article>
+      <article class="page">
+        <img src="page-09.png" alt="洛爸爸笑着把一张小纸条贴在工具盒上，写着明天再试一个办法。小洛把六轮车停进纸盒车库，还给旁边的小乘客留出一条排队的小路。">
+      </article>
+      <article class="page">
+        <img src="page-10.png" alt="刷牙前，小洛又回头看了一眼车库，灯光把六个轮子的影子照得长长的。他说：明天我还当工程师，一次只改一个地方，车子会慢慢告诉我答案。">
+      </article>
+    </section>
+    <nav class="nav" aria-label="翻页">
+      <button id="prev" type="button">上一页</button>
+      <span class="count"><span id="current">1</span> / 10</span>
+      <button id="next" type="button">下一页</button>
+    </nav>
+  </main>
+  <script>
+    const pages = Array.from(document.querySelectorAll(".page"));
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const current = document.getElementById("current");
+    let index = 0;
+
+    function render() {
+      pages.forEach((page, pageIndex) => page.classList.toggle("active", pageIndex === index));
+      current.textContent = String(index + 1);
+      prev.disabled = index === 0;
+      next.disabled = index === pages.length - 1;
+    }
+
+    prev.addEventListener("click", () => {
+      index = Math.max(0, index - 1);
+      render();
+    });
+    next.addEventListener("click", () => {
+      index = Math.min(pages.length - 1, index + 1);
+      render();
+    });
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") prev.click();
+      if (event.key === "ArrowRight" || event.key === " ") next.click();
+    });
+    render();
+  </script>
+</body>
+</html>
