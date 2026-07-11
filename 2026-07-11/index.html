@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蓝门会突然转身</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#15202a; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#263f54,#15202a); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#fff3d0; color:#24180e; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="蓝门会突然转身">
+      <article class="page active"><img src="page-01.png" alt="小栗推着木轮车冲向蓝门，伸手想自己开门。"></article>
+      <article class="page"><img src="page-02.png" alt="爸爸理解小栗想自己开门，同时提醒门动时手要离开门缝。"></article>
+      <article class="page"><img src="page-03.png" alt="爸爸示范小飞机手和向后退到安全岛的动作。"></article>
+      <article class="page"><img src="page-04.png" alt="小栗听到门响，立刻抬手并踩上黄色安全岛。"></article>
+      <article class="page"><img src="page-05.png" alt="风把蓝门吹回，门夹住红围巾，小栗理解门会突然变方向。"></article>
+      <article class="page"><img src="page-06.png" alt="小栗先收回手，请爸爸扶稳门，再从宽的一边取围巾。"></article>
+      <article class="page"><img src="page-07.png" alt="小栗给玩具车造小门和安全岛，把规则教给玩具伙伴。"></article>
+      <article class="page"><img src="page-08.png" alt="木头机器人靠近门缝，小栗提醒它先停身体再退一步。"></article>
+      <article class="page"><img src="page-09.png" alt="傍晚小栗站在门把手一侧，安全地自己打开蓝门。"></article>
+      <article class="page"><img src="page-10.png" alt="小栗和爸爸温暖回家，他既会自己开门，也会保护自己。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
