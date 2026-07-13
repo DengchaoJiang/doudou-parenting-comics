@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小河狸的停一下按钮</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#2a2018; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#5a412d,#241a13); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#f2d2a5; color:#2a2018; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="小河狸的停一下按钮">
+      <article class="page active"><img src="page-01.png" alt="小栗和爸爸在木屋里搭火车，小栗兴奋地展示超级快车。"></article>
+      <article class="page"><img src="page-02.png" alt="爸爸发现小栗牙缝里的苹果片，小栗的身体突然紧张起来。"></article>
+      <article class="page"><img src="page-03.png" alt="小栗想说不却往后躲，合上嘴时差点咬到爸爸的手。"></article>
+      <article class="page"><img src="page-04.png" alt="爸爸立即停下并退到一臂远，告诉小栗嘴巴不用替他说不。"></article>
+      <article class="page"><img src="page-05.png" alt="爸爸给小栗一片红叶，教他用停一下表达身体边界。"></article>
+      <article class="page"><img src="page-06.png" alt="小栗举起红叶说停一下，爸爸扮成小虫的手指立刻停住。"></article>
+      <article class="page"><img src="page-07.png" alt="面对牙缝里的苹果片，小栗说自己还没有准备好。"></article>
+      <article class="page"><img src="page-08.png" alt="爸爸提供镜子和水杯，小栗自己选择漱口并慢慢张嘴。"></article>
+      <article class="page"><img src="page-09.png" alt="苹果片随水花出来，小栗把红叶别在胸前作为勇敢勋章。"></article>
+      <article class="page"><img src="page-10.png" alt="睡前爸爸征得同意后抱紧小栗，两条尾巴像一床暖被子。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
