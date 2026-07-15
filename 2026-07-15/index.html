@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>十站小巴的故事地图</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#201c18; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#51473a,#181511); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#ead5ad; color:#282017; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="十站小巴的故事地图">
+      <article class="page active"><img src="page-01.png" alt="小栗把十张站牌卡铺满地毯，想讲小巴开到月亮终点站的故事。"></article>
+      <article class="page"><img src="page-02.png" alt="爸爸只空出出发、麻烦和终点三个位置，小栗放好车库、风山和月亮门。"></article>
+      <article class="page"><img src="page-03.png" alt="站牌卡挤成一团，小栗发现小巴必须先出发才能到终点。"></article>
+      <article class="page"><img src="page-04.png" alt="纸片世界醒来，小栗驾驶小蓝巴士载着爸爸朝风山出发。"></article>
+      <article class="page"><img src="page-05.png" alt="大风把七张站牌吹乱，小栗先把小巴安全停稳。"></article>
+      <article class="page"><img src="page-06.png" alt="小栗在缺木板的桥前找出属于当前麻烦的木桥卡。"></article>
+      <article class="page"><img src="page-07.png" alt="小栗、爸爸和青蛙邮差合作，用扁树皮补好小桥。"></article>
+      <article class="page"><img src="page-08.png" alt="沿途风景成为寻找站牌的线索，但第十张月亮门卡不见了。"></article>
+      <article class="page"><img src="page-09.png" alt="小栗从红铃的闷响中发现月亮门卡一直贴在铃铛背后。"></article>
+      <article class="page"><img src="page-10.png" alt="十张卡完整排到终点，小栗靠着爸爸约定明天再讲青蛙的故事。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
