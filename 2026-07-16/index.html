@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小鼹鼠的三句话警报站</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#18241d; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#4f654f,#111a15); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#e6c67c; color:#262013; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="小鼹鼠的三句话警报站">
+      <article class="page active"><img src="page-01.png" alt="米粒举起红色电话，宣布自己是警报队长。"></article>
+      <article class="page"><img src="page-02.png" alt="玩具车轮卡住，爸爸请米粒判断是否有人受伤、有火或需要立刻救援。"></article>
+      <article class="page"><img src="page-03.png" alt="米粒判断这是小麻烦，先请爸爸帮忙修好车轮。"></article>
+      <article class="page"><img src="page-04.png" alt="爸爸带米粒到警报站练习说清自己、地点和发生的事。"></article>
+      <article class="page"><img src="page-05.png" alt="帽子被风吹进水坑，米粒停下来决定和爸爸自己想办法。"></article>
+      <article class="page"><img src="page-06.png" alt="远处小木屋冒出黑烟，米粒拉住爸爸留在安全距离。"></article>
+      <article class="page"><img src="page-07.png" alt="爸爸拨通112，米粒说清姓名、松果广场和木屋冒烟。"></article>
+      <article class="page"><img src="page-08.png" alt="父子留在安全线外，红色消防车穿过树林抵达。"></article>
+      <article class="page"><img src="page-09.png" alt="消防员扑灭火并肯定父子退得远、说得清。"></article>
+      <article class="page"><img src="page-10.png" alt="米粒把电话放回原处，钻进爸爸怀里记住何时求助。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
