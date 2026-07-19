@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>天空没有天花板</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#070b18; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#263551,#050710); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#c59452; color:#111827; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="天空没有天花板">
+      <article class="page active"><img src="page-01.png" alt="雨停后，阿遥问爸爸云上面和天空外面是什么。"></article>
+      <article class="page"><img src="page-02.png" alt="爸爸展开星图，带阿遥乘想象号一层层往高处看。"></article>
+      <article class="page"><img src="page-03.png" alt="阳光与空气共同把白日天空画成蓝色。"></article>
+      <article class="page"><img src="page-04.png" alt="飞得越高空气越稀薄，父子关好飞船空气舱。"></article>
+      <article class="page"><img src="page-05.png" alt="地球的空气外衣保护地面，小流星进入大气后发热发光。"></article>
+      <article class="page"><img src="page-06.png" alt="空气逐渐稀薄，蓝天过渡成安静深黑的太空。"></article>
+      <article class="page"><img src="page-07.png" alt="从太空回望，地球呈蓝白色，周围只有薄薄大气。"></article>
+      <article class="page"><img src="page-08.png" alt="月亮绕地球，地球和其他行星绕太阳，太阳也是一颗星。"></article>
+      <article class="page"><img src="page-09.png" alt="银河之外还有许多遥远星系，宇宙辽阔无比。"></article>
+      <article class="page"><img src="page-10.png" alt="爸爸诚实告诉阿遥，人类还不知道宇宙有没有最外面。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
