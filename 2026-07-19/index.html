@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小浣熊的身体天气预报</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#1f2c2a; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#766049,#192421); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#d6a95f; color:#263126; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="小浣熊的身体天气预报">
+      <article class="page active"><img src="page-01.png" alt="开学前一天，小浣熊阿团背起红挎包，爸爸提醒他出发前先听听身体的天气预报。"></article>
+      <article class="page"><img src="page-02.png" alt="阿团的脚趾被凉鞋挤得难受，他把不适比作几朵小乌云，却还想继续冲。"></article>
+      <article class="page"><img src="page-03.png" alt="走到石桥边，脚底开始刺痛，阿团终于停下来告诉爸爸鞋子在挤他。"></article>
+      <article class="page"><img src="page-04.png" alt="爸爸蹲下检查并换上合脚的鞋，告诉阿团身体是在报告天气。"></article>
+      <article class="page"><img src="page-05.png" alt="阿团想撕手指倒刺，爸爸轻轻拦住并用小剪刀安全处理。"></article>
+      <article class="page"><img src="page-06.png" alt="炎热午后，阿团主动说自己需要喝水和吹风，爸爸及时回应。"></article>
+      <article class="page"><img src="page-07.png" alt="阿团肚皮发痒，爸爸先观察、清洁、冷敷，并说明原因还不确定。"></article>
+      <article class="page"><img src="page-08.png" alt="眼睛疲劳时，阿团合上书望向远处，让眼睛主动休息。"></article>
+      <article class="page"><img src="page-09.png" alt="阿团困倦时，爸爸缩短指令，只让他选择一种方法先收三辆车。"></article>
+      <article class="page"><img src="page-10.png" alt="阿团在幼儿园主动向老师表达如厕需要，放学后和爸爸温暖拥抱。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
