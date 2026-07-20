@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小水獭和会搬家的教室</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#172a25; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#6d5a3c,#14241f); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#d9a945; color:#243229; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="小水獭和会搬家的教室">
+      <article class="page active"><img src="page-01.png" alt="七月的河湾幼儿园临时搬进荷叶大厅，小水獭阿澜站在陌生教室门口有些不安。"></article>
+      <article class="page"><img src="page-02.png" alt="爸爸蹲下来告诉阿澜，陌生不是危险，需要帮助时可以先找到大人并开口。"></article>
+      <article class="page"><img src="page-03.png" alt="阿澜慢慢走进衣钩、水杯和脚步声都很陌生的荷叶大厅。"></article>
+      <article class="page"><img src="page-04.png" alt="画第三朵云时阿澜感到身体不适，看着陌生的门，担心老师听不懂。"></article>
+      <article class="page"><img src="page-05.png" alt="一只纸船碰到阿澜脚尖，他想起爸爸教他的短句，心里的紧张稍稍松开。"></article>
+      <article class="page"><img src="page-06.png" alt="阿澜举手告诉梅花鹿老师自己需要帮助、想去厕所，老师立刻走来。"></article>
+      <article class="page"><img src="page-07.png" alt="老师带阿澜找到蓝门，肯定他在身体发出信号时及时找大人帮助。"></article>
+      <article class="page"><img src="page-08.png" alt="阿澜发现小鼹鼠的围裙挂在椅角，没有乱扯，而是问要不要一起找老师。"></article>
+      <article class="page"><img src="page-09.png" alt="两个孩子一起向老师求助，陌生大厅里从此多了一条认识的路和回应的声音。"></article>
+      <article class="page"><img src="page-10.png" alt="回家后阿澜涂亮一周倒计时的第一片叶子，爸爸拥抱并肯定他懂得开口求助。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
