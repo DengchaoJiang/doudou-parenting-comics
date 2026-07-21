@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>影子戏院的月亮门</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#11182c; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#34223c,#0e1830); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#f1c45b; color:#31203b; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="影子戏院的月亮门">
+      <article class="page active"><img src="page-01.png" alt="萤火虫影子戏院亮灯，阿栗和爸爸坐在第一排，纸月亮从幕布后升起。"></article>
+      <article class="page"><img src="page-02.png" alt="长角巨影突然铺满幕布，阿栗害怕地抓住爸爸袖口。"></article>
+      <article class="page"><img src="page-03.png" alt="阿栗说自己害怕、不想看，爸爸立即牵他走向月亮门。"></article>
+      <article class="page"><img src="page-04.png" alt="门外晚风轻柔，爸爸告诉阿栗，影子戏不必看完。"></article>
+      <article class="page"><img src="page-05.png" alt="灯师傅抱着纸角跑出来，阿栗躲在爸爸身后观察。"></article>
+      <article class="page"><img src="page-06.png" alt="灯师傅演示纸角靠近灯会变大、远离灯会缩小。"></article>
+      <article class="page"><img src="page-07.png" alt="阿栗决定只在开着的月亮门边看一小会儿。"></article>
+      <article class="page"><img src="page-08.png" alt="阿栗握着爸爸和围巾，看见巨影下露出灯师傅的鞋尖。"></article>
+      <article class="page"><img src="page-09.png" alt="鼓声再次变大，阿栗清楚说停，爸爸立刻带他跨出月亮门。"></article>
+      <article class="page"><img src="page-10.png" alt="回家路上阿栗用手电筒玩影子，爸爸肯定他会说停、会照顾自己。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
