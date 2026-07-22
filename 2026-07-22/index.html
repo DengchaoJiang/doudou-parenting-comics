@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>事情排队啦</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#142923; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#315948,#142923); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#e2aa45; color:#1c332c; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="事情排队啦">
+      <article class="page active"><img src="page-01.png" alt="阿木同时想给小货车打气、洗车、送松果和听故事，四件事挤在一起。"></article>
+      <article class="page"><img src="page-02.png" alt="阿木同时抓水桶、气筒和松果袋，结果东西滚落，小货车没有前进。"></article>
+      <article class="page"><img src="page-03.png" alt="爸爸没有代劳，而是铺下三块树叶路牌，帮助阿木看清先做什么。"></article>
+      <article class="page"><img src="page-04.png" alt="阿木在第一块路牌画轮胎，自己用气筒把瘪轮胎打鼓。"></article>
+      <article class="page"><img src="page-05.png" alt="爸爸请阿木只选下一站，阿木在第二块路牌画出水滴。"></article>
+      <article class="page"><img src="page-06.png" alt="阿木先把松果袋搬高，再把小货车洗得干干净净。"></article>
+      <article class="page"><img src="page-07.png" alt="阿木收拾松果时发现最小的一颗滚进木板缝。"></article>
+      <article class="page"><img src="page-08.png" alt="阿木请求帮助，爸爸递来夹子，让他自己夹出小松果。"></article>
+      <article class="page"><img src="page-09.png" alt="小货车沿三块路牌出发，阿木发现事情学会了排队。"></article>
+      <article class="page"><img src="page-10.png" alt="夜里阿木把三块路牌画成连环画，和爸爸一起讲完今天的故事。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
