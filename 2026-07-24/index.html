@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>问号修车厂的双向三轮车</title>
+  <style>
+    :root { color-scheme:dark; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; background:#152a31; color:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(#244b56,#152a31); }
+    main { width:min(100vw,1180px); padding:12px; }
+    .stage { position:relative; aspect-ratio:4/3; width:100%; max-height:calc(100vh - 76px); margin:auto; overflow:hidden; border-radius:10px; background:#000; box-shadow:0 18px 60px #0009; }
+    .page { position:absolute; inset:0; display:none; }
+    .page.active { display:block; }
+    img { width:100%; height:100%; object-fit:cover; display:block; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding-top:10px; }
+    button { min-width:100px; min-height:42px; border:0; border-radius:9px; background:#f2c65d; color:#183039; font:inherit; font-weight:700; }
+    button:disabled { opacity:.4; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-label="问号修车厂的双向三轮车">
+      <article class="page active"><img src="page-01.png" alt="细雨里的修车棚中，团团造出一辆双向三轮车。"></article>
+      <article class="page"><img src="page-02.png" alt="爸爸询问哪一头是前面，团团说两头都能带队。"></article>
+      <article class="page"><img src="page-03.png" alt="小车穿过窄蓝门后，不掉头便向后行驶。"></article>
+      <article class="page"><img src="page-04.png" alt="小轮压进木槽，车身倾斜，松果滚落。"></article>
+      <article class="page"><img src="page-05.png" alt="爸爸给团团一张问号卡，邀请他一起试验。"></article>
+      <article class="page"><img src="page-06.png" alt="父子用积木搭出三种模型道路，先猜再测试。"></article>
+      <article class="page"><img src="page-07.png" alt="团团发现同一辆车换个方向会有不同表现。"></article>
+      <article class="page"><img src="page-08.png" alt="团团为车加上转向把手和停看再开的小铃铛。"></article>
+      <article class="page"><img src="page-09.png" alt="第二次送松果时，团团停车检查后平稳通过木槽。"></article>
+      <article class="page"><img src="page-10.png" alt="傍晚，团团和爸爸靠在一起，说问号带来了会思考的路。"></article>
+    </section>
+    <nav aria-label="翻页"><button id="prev" type="button">上一页</button><span><span id="current">1</span> / 10</span><button id="next" type="button">下一页</button></nav>
+  </main>
+  <script>
+    const pages=[...document.querySelectorAll('.page')],prev=document.querySelector('#prev'),next=document.querySelector('#next'),current=document.querySelector('#current');let index=0;
+    function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===index));current.textContent=index+1;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    prev.onclick=()=>{index=Math.max(0,index-1);render();};next.onclick=()=>{index=Math.min(pages.length-1,index+1);render();};
+    addEventListener('keydown',e=>{if(e.key==='ArrowLeft')prev.click();if(e.key==='ArrowRight'||e.key===' ')next.click();});render();
+  </script>
+</body>
+</html>
