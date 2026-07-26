@@ -124,7 +124,19 @@
   </main>
 
   <script>
-    const totalPages = 10;
+    const pages = [
+      "page-01.png",
+      "page-02.png",
+      "page-03.png",
+      "page-04.png",
+      "page-05.png",
+      "page-06.png",
+      "page-07.png",
+      "page-08.png",
+      "page-09.png",
+      "page-10.png"
+    ];
+    const totalPages = pages.length;
     const image = document.querySelector("#page");
     const status = document.querySelector("#status");
     const previous = document.querySelector("#previous");
@@ -134,8 +146,7 @@
 
     function showPage(pageNumber) {
       currentPage = Math.max(1, Math.min(totalPages, pageNumber));
-      const fileNumber = String(currentPage).padStart(2, "0");
-      image.src = `page-${fileNumber}.png`;
+      image.src = pages[currentPage - 1];
       image.alt = `《风坡上的三盏松果灯》第 ${currentPage} 页`;
       status.textContent = `${currentPage} / ${totalPages}`;
       previous.disabled = currentPage === 1;
@@ -159,9 +170,9 @@
       touchStartX = null;
     }, { passive: true });
 
-    for (let pageNumber = 2; pageNumber <= totalPages; pageNumber += 1) {
+    for (const page of pages.slice(1)) {
       const preload = new Image();
-      preload.src = `page-${String(pageNumber).padStart(2, "0")}.png`;
+      preload.src = page;
     }
   </script>
 </body>
