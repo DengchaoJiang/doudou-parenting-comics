@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>小钩森林开门啦</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: #17130f;
+      color: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #473728, #120f0c 72%);
+    }
+    main {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      padding: max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    }
+    header,
+    nav {
+      width: min(100%, 1080px);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(16px, 2.3vw, 22px);
+      line-height: 1.2;
+      font-weight: 650;
+    }
+    #status {
+      color: #dbcdbf;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+    }
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: min(100%, calc((100vh - 116px) * 4 / 3));
+      max-width: min(100%, calc((100dvh - 116px) * 4 / 3));
+      max-height: calc(100vh - 116px);
+      max-height: calc(100dvh - 116px);
+      aspect-ratio: 4 / 3;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 18px 52px rgb(0 0 0 / 42%);
+      background: #241b14;
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    button,
+    a {
+      min-width: 104px;
+      min-height: 44px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid #755f4c;
+      border-radius: 999px;
+      background: #392a20;
+      color: #fff;
+      text-decoration: none;
+      font: inherit;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.38;
+      cursor: default;
+    }
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #f3c85b;
+      outline-offset: 2px;
+    }
+    @media (max-width: 640px) {
+      h1 { max-width: 66vw; }
+      button,
+      a { min-width: 88px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>小钩森林开门啦</h1>
+      <span id="status" aria-live="polite">1 / 10</span>
+    </header>
+
+    <section class="stage" aria-label="绘本页面">
+      <img id="page" src="page-01.png" alt="《小钩森林开门啦》第 1 页">
+    </section>
+
+    <nav aria-label="翻页">
+      <button id="previous" type="button" disabled>上一页</button>
+      <a href="../">返回书架</a>
+      <button id="next" type="button">下一页</button>
+    </nav>
+  </main>
+
+  <script>
+    const pages = [
+      "page-01.png",
+      "page-02.png",
+      "page-03.png",
+      "page-04.png",
+      "page-05.png",
+      "page-06.png",
+      "page-07.png",
+      "page-08.png",
+      "page-09.png",
+      "page-10.png"
+    ];
+    const totalPages = pages.length;
+    const image = document.querySelector("#page");
+    const status = document.querySelector("#status");
+    const previous = document.querySelector("#previous");
+    const next = document.querySelector("#next");
+    let currentPage = 1;
+    let touchStartX = null;
+
+    function showPage(pageNumber) {
+      currentPage = Math.max(1, Math.min(totalPages, pageNumber));
+      image.src = pages[currentPage - 1];
+      image.alt = `《小钩森林开门啦》第 ${currentPage} 页`;
+      status.textContent = `${currentPage} / ${totalPages}`;
+      previous.disabled = currentPage === 1;
+      next.disabled = currentPage === totalPages;
+    }
+
+    previous.addEventListener("click", () => showPage(currentPage - 1));
+    next.addEventListener("click", () => showPage(currentPage + 1));
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") showPage(currentPage - 1);
+      if (event.key === "ArrowRight") showPage(currentPage + 1);
+    });
+    image.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    image.addEventListener("touchend", (event) => {
+      if (touchStartX === null) return;
+      const distance = event.changedTouches[0].clientX - touchStartX;
+      if (distance > 48) showPage(currentPage - 1);
+      if (distance < -48) showPage(currentPage + 1);
+      touchStartX = null;
+    }, { passive: true });
+
+    for (const page of pages.slice(1)) {
+      const preload = new Image();
+      preload.src = page;
+    }
+  </script>
+</body>
+</html>
