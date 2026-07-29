@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1f2e31">
+  <title>星期列车慢慢开</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #1f2e31;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    }
+    main {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+        max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+    }
+    .page {
+      display: none;
+      width: min(100%, calc((100vh - 20px) * 4 / 3));
+      height: auto;
+      max-height: calc(100vh - 20px);
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 14px 50px rgba(0, 0, 0, 0.42);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .page.active { display: block; }
+    button {
+      position: fixed;
+      z-index: 2;
+      top: 50%;
+      width: 58px;
+      height: 76px;
+      border: 0;
+      border-radius: 16px;
+      color: #fff;
+      background: rgba(12, 20, 22, 0.58);
+      font-size: 34px;
+      transform: translateY(-50%);
+      touch-action: manipulation;
+    }
+    #prev { left: max(12px, env(safe-area-inset-left)); }
+    #next { right: max(12px, env(safe-area-inset-right)); }
+    button:disabled { opacity: 0.18; }
+    #counter {
+      position: fixed;
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(14px, env(safe-area-inset-bottom));
+      z-index: 2;
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(12, 20, 22, 0.58);
+      font-size: 15px;
+    }
+    @media (max-width: 740px) {
+      button { width: 48px; height: 64px; font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main id="reader" aria-label="绘本阅读器">
+    <img class="page active" src="page-01.png" alt="《星期列车慢慢开》第1页">
+    <img class="page" src="page-02.png" alt="《星期列车慢慢开》第2页">
+    <img class="page" src="page-03.png" alt="《星期列车慢慢开》第3页">
+    <img class="page" src="page-04.png" alt="《星期列车慢慢开》第4页">
+    <img class="page" src="page-05.png" alt="《星期列车慢慢开》第5页">
+    <img class="page" src="page-06.png" alt="《星期列车慢慢开》第6页">
+    <img class="page" src="page-07.png" alt="《星期列车慢慢开》第7页">
+    <img class="page" src="page-08.png" alt="《星期列车慢慢开》第8页">
+    <img class="page" src="page-09.png" alt="《星期列车慢慢开》第9页">
+    <img class="page" src="page-10.png" alt="《星期列车慢慢开》第10页">
+  </main>
+  <button id="prev" type="button" aria-label="上一页">‹</button>
+  <button id="next" type="button" aria-label="下一页">›</button>
+  <div id="counter" aria-live="polite">1 / 10</div>
+  <script>
+    const pages = [...document.querySelectorAll(".page")];
+    const prev = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+    const counter = document.querySelector("#counter");
+    let current = 0;
+    let startX = 0;
+
+    function show(index) {
+      current = Math.max(0, Math.min(index, pages.length - 1));
+      pages.forEach((page, i) => page.classList.toggle("active", i === current));
+      prev.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+      counter.textContent = `${current + 1} / ${pages.length}`;
+    }
+
+    prev.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight" || event.key === " ") show(current + 1);
+    });
+    document.addEventListener("touchstart", (event) => {
+      startX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    document.addEventListener("touchend", (event) => {
+      const delta = event.changedTouches[0].clientX - startX;
+      if (Math.abs(delta) < 45) return;
+      show(current + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+    show(0);
+  </script>
+</body>
+</html>
