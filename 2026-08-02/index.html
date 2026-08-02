@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14233d">
+  <title>风车镇的四张蓝票</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #14233d;
+      color: #fff7df;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      touch-action: pan-y;
+    }
+    main {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+        max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+    }
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 12px 44px rgb(0 0 0 / 45%);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    button {
+      position: absolute;
+      top: 50%;
+      translate: 0 -50%;
+      width: 54px;
+      height: 76px;
+      border: 0;
+      border-radius: 14px;
+      background: rgb(20 35 61 / 72%);
+      color: #fff7df;
+      font-size: 34px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:disabled { opacity: 0.22; cursor: default; }
+    #prev { left: max(14px, env(safe-area-inset-left)); }
+    #next { right: max(14px, env(safe-area-inset-right)); }
+    #counter {
+      position: absolute;
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(14px, env(safe-area-inset-bottom));
+      min-width: 58px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgb(20 35 61 / 76%);
+      text-align: center;
+      font-size: 14px;
+      line-height: 1;
+    }
+    @media (max-width: 760px) {
+      button { width: 44px; height: 64px; font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-label="《风车镇的四张蓝票》绘本阅读器">
+    <img id="page" src="page-01.png" alt="">
+    <button id="prev" type="button" aria-label="上一页">‹</button>
+    <button id="next" type="button" aria-label="下一页">›</button>
+    <div id="counter" aria-live="polite">1 / 10</div>
+  </main>
+  <script>
+    const pages = [
+      "page-01.png",
+      "page-02.png",
+      "page-03.png",
+      "page-04.png",
+      "page-05.png",
+      "page-06.png",
+      "page-07.png",
+      "page-08.png",
+      "page-09.png",
+      "page-10.png"
+    ];
+    const descriptions = [
+      "清早，穿山甲男孩铠铠和山爸爸来到风车镇。猫头鹰钟叔叔递来四张蓝票：今天的四场欢乐，由你自己安排。",
+      "铠铠把票摊在石桌上：一张给早晨，一张给中午，两张留给晚霞和月亮。风一吹，四张票像四条安静的小鱼。",
+      "大风车敲响第一声钟，彩轮车呜地开来了。铠铠投进早晨票，和山爸爸绕着云朵转了一圈。",
+      "天空邮局亮起金灯。铠铠把中午票投进传声筒：爷爷，我在风车镇！筒里滚出爷爷笑呵呵的回声。",
+      "午后，泡泡船拖着一串会唱歌的圆泡泡。铠铠投进晚霞票，驾船穿过三座彩虹拱门。",
+      "糖鼓剧场、齿轮滑梯和纸鸟塔同时开门。铠铠摸到最后一张月亮票，急得鳞片都翘了起来：我三个都想玩！",
+      "山爸爸蹲下来，轻轻按住票角：你真的都想要。可蓝票不会变出第五张。现在用，还是留给月亮？",
+      "铠铠跺脚、掉泪，把票握得皱巴巴。山爸爸陪他数了四次慢呼吸。铠铠说：我先难过，票留到晚上。",
+      "没有票的下午，他们捡来落叶和细枝，做成一辆小风车。山爸爸推一下，铠铠接着跑，轮子笑得呼啦啦。",
+      "月亮升起，最后一张蓝票飞进月光电车。铠铠靠着山爸爸说：票用完了，今天没有少掉；明天，我想换一种排法。"
+    ];
+    const image = document.querySelector("#page");
+    const previous = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+    const counter = document.querySelector("#counter");
+    let current = 0;
+    let touchStartX = 0;
+
+    function show(index) {
+      current = Math.max(0, Math.min(pages.length - 1, index));
+      image.src = pages[current];
+      image.alt = descriptions[current];
+      counter.textContent = `${current + 1} / ${pages.length}`;
+      previous.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+      history.replaceState(null, "", `#${current + 1}`);
+    }
+
+    previous.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight" || event.key === " ") show(current + 1);
+    });
+    document.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    document.addEventListener("touchend", (event) => {
+      const delta = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) < 45) return;
+      show(current + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+    pages.slice(1).forEach((src) => {
+      const preload = new Image();
+      preload.src = src;
+    });
+
+    const requested = Number.parseInt(location.hash.slice(1), 10);
+    show(Number.isFinite(requested) ? requested - 1 : 0);
+  </script>
+</body>
+</html>
