@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#493a2d">
+  <title>小红灯会说话</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #493a2d;
+      color: #fff8e8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      touch-action: pan-y;
+    }
+    main {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+        max(24px, calc(8vh + env(safe-area-inset-bottom))) max(10px, env(safe-area-inset-left));
+    }
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: calc(92vh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      aspect-ratio: 4 / 3;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 12px 44px rgb(0 0 0 / 45%);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    button {
+      position: absolute;
+      top: 50%;
+      translate: 0 -50%;
+      width: 54px;
+      height: 76px;
+      border: 0;
+      border-radius: 14px;
+      background: rgb(73 58 45 / 74%);
+      color: #fff8e8;
+      font-size: 34px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:disabled { opacity: 0.22; cursor: default; }
+    #prev { left: max(14px, env(safe-area-inset-left)); }
+    #next { right: max(14px, env(safe-area-inset-right)); }
+    #counter {
+      position: absolute;
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(14px, env(safe-area-inset-bottom));
+      min-width: 58px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgb(73 58 45 / 78%);
+      text-align: center;
+      font-size: 14px;
+      line-height: 1;
+    }
+    @media (max-width: 760px) {
+      button { width: 44px; height: 64px; font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-label="《小红灯会说话》绘本阅读器">
+    <img id="page" src="page-01.png" alt="">
+    <button id="prev" type="button" aria-label="上一页">‹</button>
+    <button id="next" type="button" aria-label="下一页">›</button>
+    <div id="counter" aria-live="polite">1 / 10</div>
+  </main>
+  <script>
+    const pages = [
+      "page-01.png",
+      "page-02.png",
+      "page-03.png",
+      "page-04.png",
+      "page-05.png",
+      "page-06.png",
+      "page-07.png",
+      "page-08.png",
+      "page-09.png",
+      "page-10.png"
+    ];
+    const descriptions = [
+      "早晨，松塔爸爸送小獾阿澄到榛果园。他碰了碰阿澄的手心：身体里有一盏小红灯。疼了、害怕了，它就提醒你去找能帮忙的大人。",
+      "下午，阿澄和伙伴们在木头工地搭桥。小鼹鼠团团举着长臂吊车一转身，木臂碰到了阿澄的手腕。",
+      "阿澄疼得吸了一口气，眼泪挤到眼角。四周又吵又忙，他想说话，可句子像一颗圆石头，卡在喉咙里。",
+      "阿澄低头继续推清扫车，可手腕一动就疼。心里的小红灯提醒他，身体需要帮助。",
+      "阿澄停下车，退到安全的地方，请团团不要再把长臂转过来。团团把吊车轻轻放在地上。",
+      "阿澄走到鹿老师身边，清楚地说长臂吊车碰到了自己的手腕，这里疼。",
+      "鹿老师蹲下来检查，又拿来一块凉凉的软布，先照顾阿澄的手，再了解发生了什么。",
+      "团团道歉后，鹿老师把长臂车搬到空地，大家一起铺出一条黄色安全线。",
+      "阿澄选择先休息，团团在安全线里摆好桥墩，等他不疼了再一起搭桥。",
+      "傍晚，阿澄把整件事讲给松塔爸爸。求助保护了身体，也让大家学会更安全地一起玩。"
+    ];
+    const image = document.querySelector("#page");
+    const previous = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+    const counter = document.querySelector("#counter");
+    let current = 0;
+    let touchStartX = 0;
+
+    function show(index) {
+      current = Math.max(0, Math.min(pages.length - 1, index));
+      image.src = pages[current];
+      image.alt = descriptions[current];
+      counter.textContent = `${current + 1} / ${pages.length}`;
+      previous.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+      history.replaceState(null, "", `#${current + 1}`);
+    }
+
+    previous.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight" || event.key === " ") show(current + 1);
+    });
+    document.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    document.addEventListener("touchend", (event) => {
+      const delta = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) < 45) return;
+      show(current + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+    pages.slice(1).forEach((src) => {
+      const preload = new Image();
+      preload.src = src;
+    });
+
+    const requested = Number.parseInt(location.hash.slice(1), 10);
+    show(Number.isFinite(requested) ? requested - 1 : 0);
+  </script>
+</body>
+</html>
