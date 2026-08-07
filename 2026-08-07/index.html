@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#26352b">
+  <title>软圈圈住在最上层｜2026-08-07</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #26352b;
+      color: #f4e5c4;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { background: radial-gradient(circle at 50% 26%, #59624c 0%, #26352b 72%); }
+    main {
+      width: 100%;
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) 0 max(10px, env(safe-area-inset-left));
+    }
+    .stage {
+      position: relative;
+      min-height: 0;
+      padding: 4px 4px 8px;
+      overflow: hidden;
+    }
+    #page {
+      position: absolute;
+      inset: 4px 4px 8px;
+      display: block;
+      width: calc(100% - 8px);
+      height: calc(100% - 12px);
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      border-radius: 12px;
+      box-shadow: 0 14px 44px rgba(0, 0, 0, .42);
+      background: #334438;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .controls {
+      min-height: calc(8vh + env(safe-area-inset-bottom));
+      display: grid;
+      grid-template-columns: minmax(96px, 1fr) auto minmax(96px, 1fr);
+      align-items: start;
+      gap: 12px;
+      padding: 8px 4px max(10px, env(safe-area-inset-bottom));
+    }
+    button {
+      min-height: 48px;
+      border: 1px solid rgba(244, 229, 196, .3);
+      border-radius: 999px;
+      background: rgba(244, 229, 196, .12);
+      color: #f4e5c4;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 650;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    button:disabled { opacity: .35; cursor: default; }
+    #previous { justify-self: end; width: min(190px, 100%); }
+    #next { justify-self: start; width: min(190px, 100%); }
+    #counter {
+      min-width: 70px;
+      padding-top: 13px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      color: rgba(244, 229, 196, .84);
+    }
+    @media (max-height: 620px) {
+      .controls { gap: 8px; }
+      button { min-height: 42px; font-size: 16px; }
+      #counter { padding-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-label="绘本《软圈圈住在最上层》">
+    <section class="stage">
+      <img id="page" src="page-01.png" alt="小貘啵啵和榛爸爸去果篮街买晚餐。他们挑了一个圆西瓜、三个红苹果，还有四只香喷喷的软圈饼。" draggable="false">
+    </section>
+    <nav class="controls" aria-label="翻页控制">
+      <button id="previous" type="button" aria-label="上一页">上一页</button>
+      <span id="counter" aria-live="polite">1 / 10</span>
+      <button id="next" type="button" aria-label="下一页">下一页</button>
+    </nav>
+  </main>
+  <script>
+    const pages = Array.from({ length: 10 }, (_, index) => `page-${String(index + 1).padStart(2, "0")}.png`);
+    const descriptions = [
+      "小貘啵啵和榛爸爸去果篮街买晚餐。他们挑了一个圆西瓜、三个红苹果，还有四只香喷喷的软圈饼。",
+      "啵啵敲敲西瓜，又轻轻按了按软圈饼：一个硬，一个软；一个重，一个轻。",
+      "我都能装！啵啵先把软圈饼放进袋底，又把苹果放进去，最后把大西瓜搁在最上面。",
+      "才走两步，袋里传来轻轻一声：噗——四只圆圈被压成了扁扁的小云。",
+      "啵啵的耳朵垂下来：它们不好看了，是不是只能扔掉？",
+      "榛爸爸先看包装，又闻一闻：没有破，也没有坏。形状变了，不等于不能吃。",
+      "他们把东西全拿出来。啵啵指着地面说：重的、硬的住下面；轻的、软的住上面！",
+      "西瓜单独坐进爸爸的篮子，苹果住进小袋中间，软圈饼搬到最上层。",
+      "这次走再远，袋里也安安静静。啵啵拍拍小袋：我会给每样东西找位置。",
+      "回到家，扁扁的软圈饼还是香香的。啵啵咬一口笑了：我还带回了一个新办法。"
+    ];
+    const image = document.querySelector("#page");
+    const previous = document.querySelector("#previous");
+    const next = document.querySelector("#next");
+    const counter = document.querySelector("#counter");
+    let current = 0;
+
+    function show(index) {
+      current = Math.max(0, Math.min(pages.length - 1, index));
+      image.src = pages[current];
+      image.alt = descriptions[current];
+      counter.textContent = `${current + 1} / ${pages.length}`;
+      previous.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+    }
+
+    previous.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight" || event.key === " ") show(current + 1);
+    });
+    let touchStartX = null;
+    document.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    document.addEventListener("touchend", (event) => {
+      if (touchStartX === null) return;
+      const delta = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) > 48) show(current + (delta < 0 ? 1 : -1));
+      touchStartX = null;
+    }, { passive: true });
+    show(0);
+  </script>
+</body>
+</html>
