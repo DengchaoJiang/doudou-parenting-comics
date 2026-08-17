@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#18322f">
+  <title>2026-08-17 科普绘本《脚趾寄来的小纸条》</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #18322f;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      background: radial-gradient(circle at 50% 35%, #486257 0, #18322f 66%, #101d1b 100%);
+      touch-action: pan-y;
+      user-select: none;
+    }
+    main {
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: clamp(12px, 2vh, 22px);
+      padding:
+        max(12px, env(safe-area-inset-top))
+        max(12px, env(safe-area-inset-right))
+        calc(8vh + env(safe-area-inset-bottom))
+        max(12px, env(safe-area-inset-left));
+    }
+    .stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+    }
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      min-width: 0;
+      min-height: 0;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #d4c39d;
+      box-shadow: 0 14px 42px rgb(0 0 0 / 35%);
+    }
+    nav {
+      display: grid;
+      grid-template-columns: minmax(112px, 1fr) auto minmax(112px, 1fr);
+      align-items: center;
+      gap: 14px;
+      width: min(760px, 100%);
+      margin: 0 auto;
+    }
+    button {
+      min-height: 52px;
+      padding: 10px 20px;
+      border: 1px solid rgb(255 255 255 / 18%);
+      border-radius: 999px;
+      background: #f0d476;
+      color: #18322f;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 750;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active:not(:disabled) { transform: translateY(1px); }
+    button:disabled { opacity: .34; cursor: default; }
+    #counter {
+      min-width: 94px;
+      text-align: center;
+      color: #fff9e8;
+      font-size: 17px;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 1px 2px #000;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    @media (max-height: 620px) {
+      main { gap: 8px; padding-bottom: calc(8vh + env(safe-area-inset-bottom)); }
+      nav { gap: 10px; }
+      button { min-height: 44px; font-size: 16px; }
+      #counter { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 class="sr-only">2026-08-17 科普绘本《脚趾寄来的小纸条》</h1>
+    <section class="stage" aria-live="polite">
+      <img id="page" src="page-01.png" alt="第 1 页：雨后，砾砾准备参加叶子船巡游">
+    </section>
+    <nav aria-label="绘本翻页">
+      <button id="prev" type="button" disabled>上一页</button>
+      <span id="counter" aria-live="polite">第 1 / 10 页</span>
+      <button id="next" type="button">下一页</button>
+    </nav>
+  </main>
+  <script>
+    const pages = [
+      { src: "page-01.png", alt: "第 1 页：雨后，砾砾准备参加叶子船巡游" },
+      { src: "page-02.png", alt: "第 2 页：黄色雨鞋挤到了砾砾的脚趾" },
+      { src: "page-03.png", alt: "第 3 页：脚趾用三张小纸条报告不舒服" },
+      { src: "page-04.png", alt: "第 4 页：砾砾告诉爸爸疼痛和舍不得" },
+      { src: "page-05.png", alt: "第 5 页：父子在纸上描出脚的轮廓" },
+      { src: "page-06.png", alt: "第 6 页：父子比较脚印和旧雨鞋鞋底" },
+      { src: "page-07.png", alt: "第 7 页：砾砾试穿舒适的青绿色防水鞋" },
+      { src: "page-08.png", alt: "第 8 页：爸爸接住砾砾对旧雨鞋的不舍" },
+      { src: "page-09.png", alt: "第 9 页：旧雨鞋被擦亮并放进纪念盒" },
+      { src: "page-10.png", alt: "第 10 页：舒适的脚趾陪砾砾扶正叶子船" }
+    ];
+    let current = 0;
+    const image = document.querySelector("#page");
+    const counter = document.querySelector("#counter");
+    const previous = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+
+    function render() {
+      image.src = pages[current].src;
+      image.alt = pages[current].alt;
+      counter.textContent = `第 ${current + 1} / ${pages.length} 页`;
+      previous.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+    }
+
+    function go(delta) {
+      current = Math.max(0, Math.min(pages.length - 1, current + delta));
+      render();
+    }
+
+    previous.addEventListener("click", () => go(-1));
+    next.addEventListener("click", () => go(1));
+    addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft") go(-1);
+      if (event.key === "ArrowRight" || event.key === " ") go(1);
+    });
+
+    let touchStartX = 0;
+    addEventListener("touchstart", event => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    addEventListener("touchend", event => {
+      const distance = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(distance) > 48) go(distance > 0 ? -1 : 1);
+    }, { passive: true });
+
+    pages.slice(1).forEach(item => {
+      const preload = new Image();
+      preload.src = item.src;
+    });
+  </script>
+</body>
+</html>
