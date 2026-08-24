@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#493a2d">
+  <title>四辆果车过窄桥</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #493a2d;
+      color: #fff8e8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      touch-action: pan-y;
+    }
+    main {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+        max(24px, calc(8vh + env(safe-area-inset-bottom))) max(10px, env(safe-area-inset-left));
+    }
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: calc(92vh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      aspect-ratio: 4 / 3;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 12px 44px rgb(0 0 0 / 45%);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    button {
+      position: absolute;
+      top: 50%;
+      translate: 0 -50%;
+      width: 54px;
+      height: 76px;
+      border: 0;
+      border-radius: 14px;
+      background: rgb(73 58 45 / 74%);
+      color: #fff8e8;
+      font-size: 34px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:disabled { opacity: 0.22; cursor: default; }
+    #prev { left: max(14px, env(safe-area-inset-left)); }
+    #next { right: max(14px, env(safe-area-inset-right)); }
+    #counter {
+      position: absolute;
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(14px, env(safe-area-inset-bottom));
+      min-width: 58px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgb(73 58 45 / 78%);
+      text-align: center;
+      font-size: 14px;
+      line-height: 1;
+    }
+    @media (max-width: 760px) {
+      button { width: 44px; height: 64px; font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-label="《四辆果车过窄桥》绘本阅读器">
+    <img id="page" src="page-01.png" alt="">
+    <button id="prev" type="button" aria-label="上一页">‹</button>
+    <button id="next" type="button" aria-label="下一页">›</button>
+    <div id="counter" aria-live="polite">1 / 10</div>
+  </main>
+  <script>
+    const pages = [
+      "page-01.png",
+      "page-02.png",
+      "page-03.png",
+      "page-04.png",
+      "page-05.png",
+      "page-06.png",
+      "page-07.png",
+      "page-08.png",
+      "page-09.png",
+      "page-10.png"
+    ];
+    const descriptions = [
+      "清早，花瓣集市还没开门，栗栗已经摆好四辆果车。车上装着七种果子，还有两颗名字刚想出来的阿巴果。",
+      "栗栗一挥小旗，四辆车同时冲向窄木桥，车头车尾挤成了团。",
+      "果子滚了一地，柏爸爸接住快掉进河里的圆果，栗栗急得说路坏了。",
+      "柏爸爸说明桥没有坏，栗栗把车排成一线，却发现第一辆装得太高。",
+      "栗栗比较果子的大小、轻重、软硬和形状，把它们分进合适的车。",
+      "栗栗把绳子、小篮和木楔装进小红车，让它成为救援车。",
+      "车辆按顺序等待过桥，栗栗用左右两组叶片标记进度。",
+      "篮车的圆果卡在桥边，栗栗让其他车等待并呼叫救援车。",
+      "小红车送来木楔，柏爸爸稳住篮子，栗栗接回圆果，集市也开门了。",
+      "傍晚，四辆空车按序回家，栗栗靠着柏爸爸数着铃声。"
+    ];
+    const image = document.querySelector("#page");
+    const previous = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+    const counter = document.querySelector("#counter");
+    let current = 0;
+    let touchStartX = 0;
+
+    function show(index) {
+      current = Math.max(0, Math.min(pages.length - 1, index));
+      image.src = pages[current];
+      image.alt = descriptions[current];
+      counter.textContent = `${current + 1} / ${pages.length}`;
+      previous.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+      history.replaceState(null, "", `#${current + 1}`);
+    }
+
+    previous.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight" || event.key === " ") show(current + 1);
+    });
+    document.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    document.addEventListener("touchend", (event) => {
+      const delta = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) < 45) return;
+      show(current + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+    pages.slice(1).forEach((src) => {
+      const preload = new Image();
+      preload.src = src;
+    });
+
+    const requested = Number.parseInt(location.hash.slice(1), 10);
+    show(Number.isFinite(requested) ? requested - 1 : 0);
+  </script>
+</body>
+</html>
