@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#26362f">
+  <title>银水线去哪儿了</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      background: #26362f;
+      color: #fff;
+      font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      touch-action: pan-y;
+    }
+    .stage {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 14px calc(8vh + env(safe-area-inset-bottom));
+    }
+    #page {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      min-width: 0;
+      min-height: 0;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 10px 34px rgba(0, 0, 0, 0.38);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .controls {
+      min-height: 68px;
+      display: grid;
+      grid-template-columns: minmax(96px, 1fr) auto minmax(96px, 1fr);
+      align-items: center;
+      gap: 14px;
+      padding: 8px max(16px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      background: rgba(15, 27, 22, 0.96);
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 14px;
+      background: #e6bd62;
+      color: #202a24;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.35; cursor: default; }
+    #counter { min-width: 64px; text-align: center; font-size: 17px; font-variant-numeric: tabular-nums; }
+    @media (max-height: 640px) {
+      .stage { padding-top: 8px; padding-bottom: calc(7vh + env(safe-area-inset-bottom)); }
+      .controls { min-height: 58px; }
+      button { min-height: 42px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" aria-live="polite">
+    <img id="page" src="page-01.png" alt="一场小雨刚停，獾宝宝斑斑发现一条亮闪闪的水线。它绕过松果，又在斜坡下面忽然断掉了。">
+  </main>
+  <nav class="controls" aria-label="翻页">
+    <button id="prev" type="button" disabled>上一页</button>
+    <span id="counter" aria-label="页码">1 / 10</span>
+    <button id="next" type="button">下一页</button>
+  </nav>
+  <script>
+    const pages = [
+      ["page-01.png", "一场小雨刚停，獾宝宝斑斑发现一条亮闪闪的水线。它绕过松果，又在斜坡下面忽然断掉了。"],
+      ["page-02.png", "岩爸爸，银水线跑到哪儿去了？岩爸爸蹲下来：我现在还不知道。我们先找证据。"],
+      ["page-03.png", "斑斑把三颗松果放在水线边。风吹过，太阳探出云缝，第二颗松果旁的水线慢慢变窄了。"],
+      ["page-04.png", "斜坡最低处有一只带小孔的铁盖，水正咕噜咕噜钻进去。第一条证据！斑斑喊。"],
+      ["page-05.png", "花圃边的泥土颜色深深的，摸起来湿湿的。水正慢慢藏进泥土缝里——这是第二条证据。"],
+      ["page-06.png", "石板中间没有小孔，也没有泥土，水却越来越少。斑斑发现：太阳下的石板暖，树影里的石板凉。"],
+      ["page-07.png", "太阳的热和风，会让一些水变成看不见的水汽。岩爸爸说，我们看不见它，却能看见水迹变小。"],
+      ["page-08.png", "他们逛完菜园回来，三颗松果旁只剩深浅不同的暗印。最细的那段水线已经完全不见了。"],
+      ["page-09.png", "斑斑掰着手指数：有的流进小孔，有的钻进泥土，还有的变成水汽。它们走的路不一样。"],
+      ["page-10.png", "回家的路上，斑斑又遇见一块湿石板。他先看高低、摸泥土、找太阳：银水线，这次我来找你的三条路！"]
+    ];
+    const image = document.querySelector("#page");
+    const counter = document.querySelector("#counter");
+    const prev = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+    let current = 0;
+    let touchStartX = null;
+
+    function show(index) {
+      current = Math.max(0, Math.min(pages.length - 1, index));
+      image.src = pages[current][0];
+      image.alt = pages[current][1];
+      counter.textContent = `${current + 1} / ${pages.length}`;
+      prev.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+    }
+
+    prev.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight") show(current + 1);
+    });
+    document.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    document.addEventListener("touchend", (event) => {
+      if (touchStartX === null) return;
+      const delta = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) > 45) show(current + (delta < 0 ? 1 : -1));
+      touchStartX = null;
+    }, { passive: true });
+  </script>
+</body>
+</html>
