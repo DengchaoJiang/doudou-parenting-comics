@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>床单坐上泡泡转车</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      background: #17130f;
+      color: #fff8e8;
+      font-family: system-ui, "Microsoft YaHei", sans-serif;
+    }
+    main {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 14px;
+    }
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 10px 36px #0009;
+    }
+    nav {
+      min-height: calc(8vh + env(safe-area-inset-bottom));
+      display: grid;
+      grid-template-columns: minmax(110px, 1fr) auto minmax(110px, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
+      background: #17130f;
+    }
+    button {
+      min-height: 52px;
+      border: 1px solid #fff3;
+      border-radius: 14px;
+      background: #f0c56f;
+      color: #21170b;
+      font: inherit;
+      font-weight: 700;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .35; cursor: default; }
+    #next { justify-self: stretch; }
+    #prev { justify-self: stretch; }
+    #counter { min-width: 74px; text-align: center; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <main><img id="page" src="page-01.png" alt="第1页：澄澄发现星星床单上的泥印。"></main>
+  <nav aria-label="绘本翻页">
+    <button id="prev" type="button" disabled>上一页</button>
+    <span id="counter" aria-live="polite">1 / 10</span>
+    <button id="next" type="button">下一页</button>
+  </nav>
+  <script>
+    const pages = [
+      "page-01.png", "page-02.png", "page-03.png", "page-04.png", "page-05.png",
+      "page-06.png", "page-07.png", "page-08.png", "page-09.png", "page-10.png"
+    ];
+    const alts = [
+      "澄澄发现星星床单上的泥印。",
+      "榉爸爸陪澄澄检查床单。",
+      "澄澄把两块抹布归位并把床单放进洗衣机。",
+      "父子一起加入洗衣液并启动洗衣机。",
+      "星星床单在泡泡和水中翻动。",
+      "榉爸爸扶稳想跟着转圈的澄澄。",
+      "父子取出洗净但湿重的床单。",
+      "床单烘干时，澄澄叠枕套，爸爸设置计时器。",
+      "计时器响起，干净床单从烘干机出来。",
+      "澄澄睡进干净的星星床单，榉爸爸替他掖好被角。"
+    ];
+    let index = 0;
+    const image = document.getElementById("page");
+    const counter = document.getElementById("counter");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    function show(nextIndex) {
+      index = Math.max(0, Math.min(9, nextIndex));
+      image.src = pages[index];
+      image.alt = `第${index + 1}页：${alts[index]}`;
+      counter.textContent = `${index + 1} / 10`;
+      prev.disabled = index === 0;
+      next.disabled = index === 9;
+    }
+    prev.addEventListener("click", () => show(index - 1));
+    next.addEventListener("click", () => show(index + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(index - 1);
+      if (event.key === "ArrowRight") show(index + 1);
+    });
+    let touchX = null;
+    document.addEventListener("touchstart", event => { touchX = event.changedTouches[0].clientX; }, { passive: true });
+    document.addEventListener("touchend", event => {
+      if (touchX === null) return;
+      const delta = event.changedTouches[0].clientX - touchX;
+      if (Math.abs(delta) > 45) show(index + (delta < 0 ? 1 : -1));
+      touchX = null;
+    }, { passive: true });
+  </script>
+</body>
+</html>
