@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>2026-09-06 科普绘本《多带的一辆车》</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#17241d;color:#fff;font-family:system-ui,sans-serif}body{height:100dvh;display:flex;flex-direction:column;overflow:hidden}.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:10px}img{display:block;width:100%;height:100%;object-fit:contain}nav{flex:none;min-height:calc(8vh + env(safe-area-inset-bottom));display:flex;align-items:center;gap:16px;padding:8px 18px calc(8px + env(safe-area-inset-bottom));background:#22392a}button{flex:1;min-height:48px;border:0;border-radius:14px;background:#f2ce76;color:#203125;font:600 20px system-ui;cursor:pointer}button:disabled{opacity:.38;cursor:default}output{min-width:64px;text-align:center;font-size:18px}button:focus-visible{outline:3px solid white;outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="stage"><img id="page" src="page-01.png" alt="桔桔为自己和朋友准备两辆玩具车"></main>
+<nav aria-label="绘本翻页"><button id="prev" type="button">上一页</button><output id="count" aria-live="polite">1 / 10</output><button id="next" type="button">下一页</button></nav>
+<script>
+const pages=['page-01.png','page-02.png','page-03.png','page-04.png','page-05.png','page-06.png','page-07.png','page-08.png','page-09.png','page-10.png'];
+const descriptions=['桔桔为自己和朋友准备两辆玩具车','父子检查布袋里的两辆车','桔桔邀请米粒一起玩','米粒想先造一个车站','桔桔回来表达失落','爸爸理解桔桔的期待','桔桔提出用车运屋顶','黄车试着开进叶子车站','大家调整车站让两辆车停好','朋友一起收叶并回到车站'];
+const page=document.getElementById('page'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
+let index=0;
+function show(n){index=Math.max(0,Math.min(9,n));page.src=pages[index];page.alt=descriptions[index];count.value=`${index+1} / 10`;prev.disabled=index===0;next.disabled=index===9;history.replaceState(null,'','#'+(index+1));if(index<9){const preload=new Image();preload.src=pages[index+1]}}
+prev.addEventListener('click',()=>show(index-1));next.addEventListener('click',()=>show(index+1));document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')show(index+1);if(e.key==='ArrowLeft')show(index-1)});
+show((Number(location.hash.slice(1))||1)-1);
+</script>
+</body>
+</html>
