@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>尺子走到头以后 · 2026-09-08</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#161b21;color:#fff;font-family:system-ui,"Microsoft YaHei",sans-serif}
+body{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px 10px 0;touch-action:pan-y}
+img{display:block;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+nav{flex:none;min-height:calc(8vh + env(safe-area-inset-bottom));padding:8px 10px max(8px,env(safe-area-inset-bottom));display:flex;gap:12px;justify-content:center;align-items:center}
+button,a{font:inherit;font-size:16px;border:1px solid #677481;border-radius:10px;padding:10px 16px;min-height:44px;background:#27333e;color:#fff;text-decoration:none;cursor:pointer}
+button:disabled{opacity:.45;cursor:default}button:focus-visible,a:focus-visible{outline:3px solid #ffd277;outline-offset:3px}
+output{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+#retry[hidden]{display:none}@media(max-width:560px){nav{gap:6px}button,a{padding:8px 10px;font-size:14px}}
+</style>
+</head>
+<body>
+<main aria-label="尺子走到头以后"><img id="page" src="page-01.png" alt="松米给红货车搭了一座纸板车库。车头进去了，车尾还在外面。"></main>
+<nav aria-label="绘本翻页"><a href="../">绘本目录</a><button id="prev" type="button">上一页</button><output id="count" aria-live="polite">1 / 10</output><button id="next" type="button">下一页</button><button id="retry" type="button" hidden>图片未加载，重试</button></nav>
+<script>
+const texts=["松米给红货车搭了一座纸板车库。车头进去了，车尾还在外面。","“它的尾巴也想住进去！”松米拿来短尺子，要量一量货车。","尺子走到头了，车尾还没有到。松米举起它：“后面的怎么办？”","爸爸铺好一条纸，把车停在旁边。“先在车头这里画个起点。”","松米从起点摆好尺子，在尺尾点一点。一个蓝点，替尺子记住了走到哪里。","他把尺子往前挪，却留下了一条缝。爸爸轻轻指着：“这里还没有量到呢。”","松米把尺头退回来，紧紧接上蓝点。“不能跳过去，要从这里接着走！”","尺子又走了一段，终于追上了车尾。松米画下终点：“原来还能接着量！”","爸爸照着纸条，做好了长一点的车库。松米留出一点空地方，把货车推了进去。","这回，车头和车尾都住进去了。短尺子躺在门边，也完成了一趟长旅行。"];
+const page=document.getElementById('page'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count'),retry=document.getElementById('retry');
+let current=0,busy=false,pending=0,serial=0;
+const source=n=>'page-'+String(n+1).padStart(2,'0')+'.png';
+function controls(){prev.disabled=busy||current===0;next.disabled=busy||current===9}
+function show(n){
+ n=Math.max(0,Math.min(9,n));pending=n;const ticket=++serial;busy=true;retry.hidden=true;controls();
+ const candidate=new Image();
+ candidate.onload=()=>{if(ticket!==serial)return;page.src=candidate.src;page.alt=texts[n];current=n;busy=false;count.value=(n+1)+' / 10';document.body.dataset.page=String(n+1);history.replaceState(null,'','#'+(n+1));controls();if(n<9){const prefetch=new Image();prefetch.src=source(n+1)}};
+ candidate.onerror=()=>{if(ticket!==serial)return;busy=false;retry.hidden=false;controls()};
+ candidate.src=source(n);
+}
+prev.onclick=()=>show(current-1);next.onclick=()=>show(current+1);retry.onclick=()=>show(pending);
+document.addEventListener('keydown',e=>{if(busy)return;if(e.key==='ArrowRight'){e.preventDefault();show(current+1)}if(e.key==='ArrowLeft'){e.preventDefault();show(current-1)}});
+let touchStart=null;
+page.addEventListener('touchstart',e=>{touchStart=e.touches[0].clientX},{passive:true});
+page.addEventListener('touchend',e=>{if(touchStart===null)return;const delta=e.changedTouches[0].clientX-touchStart;touchStart=null;if(!busy&&Math.abs(delta)>50)show(current+(delta<0?1:-1))},{passive:true});
+const initial=Number(location.hash.slice(1));show(Number.isInteger(initial)&&initial>=1&&initial<=10?initial-1:0);
+</script>
+</body>
+</html>
