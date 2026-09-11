@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>月亮把事情变小了 · 2026-09-11</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#161b21;color:#fff;font-family:system-ui,"Microsoft YaHei",sans-serif}
+body{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px 10px 0;touch-action:pan-y}
+img{display:block;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+nav{flex:none;min-height:calc(8vh + env(safe-area-inset-bottom));padding:8px 10px max(8px,env(safe-area-inset-bottom));display:flex;gap:12px;justify-content:center;align-items:center}
+button,a{font:inherit;font-size:16px;border:1px solid #677481;border-radius:10px;padding:10px 16px;min-height:44px;background:#27333e;color:#fff;text-decoration:none;cursor:pointer}
+button:disabled{opacity:.45;cursor:default}button:focus-visible,a:focus-visible{outline:3px solid #ffd277;outline-offset:3px}
+output{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+#retry[hidden]{display:none}@media(max-width:560px){nav{gap:6px}button,a{padding:8px 10px;font-size:14px}}
+</style>
+</head>
+<body>
+<main aria-label="月亮把事情变小了"><img id="page" src="page-01.png" alt="傍晚，团团拖着两只像装了沙子的脚回到家。他小声说：我好热，也好困。"></main>
+<nav aria-label="绘本翻页"><a href="../">绘本目录</a><button id="prev" type="button">上一页</button><output id="count" aria-live="polite">1 / 10</output><button id="next" type="button">下一页</button><button id="retry" type="button" hidden>图片未加载，重试</button></nav>
+<script>
+const texts=["傍晚，团团拖着两只像装了沙子的脚回到家。他小声说：我好热，也好困。","厨房里，浣熊爸爸守着咕嘟咕嘟的汤锅。先挂外套、洗手、坐好、吃饭，吃完还要刷牙。","事情越叠越高，像一座摇摇晃晃的积木塔。团团的袖口挂住了爪子，勺子也当啷一声倒下。","我要爸爸现在就来！团团的声音又尖又大。爸爸把火调小，走到他面前蹲下来。","爸爸看见团团打了一个长长的哈欠。原来不是团团故意捣乱，是困意比他们先到家。","爸爸收起高高的任务塔，只留下两张小卡片：一张饭碗，一张月亮。今晚只走两步。","团团抓住爸爸的围裙：可我现在就想要你。爸爸抱住他，慢慢数到十。","爸爸翻过小沙漏：沙子落到底，我把汤锅安顿好，就回来陪你。团团坐在安全的小凳上等待。","最后一粒沙还没躺好，爸爸就回来了。你真的回来了。团团的肩膀松了下来。","团团吃过饭、刷完一首短歌，钻进被窝。事情变小以后，我就能一步一步走到了。"];
+const page=document.getElementById('page'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count'),retry=document.getElementById('retry');
+let current=0,busy=false,pending=0,serial=0;
+const source=n=>'page-'+String(n+1).padStart(2,'0')+'.png';
+function controls(){prev.disabled=busy||current===0;next.disabled=busy||current===9}
+function show(n){
+ n=Math.max(0,Math.min(9,n));pending=n;const ticket=++serial;busy=true;retry.hidden=true;controls();
+ const candidate=new Image();
+ candidate.onload=()=>{if(ticket!==serial)return;page.src=candidate.src;page.alt=texts[n];current=n;busy=false;count.value=(n+1)+' / 10';document.body.dataset.page=String(n+1);history.replaceState(null,'','#'+(n+1));controls();if(n<9){const prefetch=new Image();prefetch.src=source(n+1)}};
+ candidate.onerror=()=>{if(ticket!==serial)return;busy=false;retry.hidden=false;controls()};
+ candidate.src=source(n);
+}
+prev.onclick=()=>show(current-1);next.onclick=()=>show(current+1);retry.onclick=()=>show(pending);
+document.addEventListener('keydown',e=>{if(busy)return;if(e.key==='ArrowRight'){e.preventDefault();show(current+1)}if(e.key==='ArrowLeft'){e.preventDefault();show(current-1)}});
+let touchStart=null;
+page.addEventListener('touchstart',e=>{touchStart=e.touches[0].clientX},{passive:true});
+page.addEventListener('touchend',e=>{if(touchStart===null)return;const delta=e.changedTouches[0].clientX-touchStart;touchStart=null;if(!busy&&Math.abs(delta)>50)show(current+(delta<0?1:-1))},{passive:true});
+const initial=Number(location.hash.slice(1));show(Number.isInteger(initial)&&initial>=1&&initial<=10?initial-1:0);
+</script>
+</body>
+</html>
