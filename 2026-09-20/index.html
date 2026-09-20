@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>三下碰拳以后</title>
+  <style>
+    :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: #17130f; color: #fff8e9; overflow: hidden; }
+    main { height: 100vh; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+    .stage { display: grid; place-items: center; min-height: 0; overflow: hidden; padding: 12px 16px calc(8vh + env(safe-area-inset-bottom)); }
+    .page { display: none; max-width: 100%; max-height: calc(92vh - 88px); width: auto; height: auto; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 36px rgb(0 0 0 / 35%); }
+    .page.active { display: block; }
+    nav { min-height: 64px; display: grid; grid-template-columns: minmax(96px, 1fr) auto minmax(96px, 1fr); align-items: center; gap: 12px; padding: 8px max(16px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+    button { min-height: 44px; border: 1px solid #6f5b43; border-radius: 10px; background: #2a221b; color: #fff8e9; font: inherit; padding: 0 16px; }
+    button:last-child { justify-self: end; }
+    button:disabled { opacity: .35; }
+    .count { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
+    @media (max-width: 700px) { .stage { padding: 6px 6px calc(8vh + env(safe-area-inset-bottom)); } nav { min-height: 58px; } .page { border-radius: 6px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" aria-live="polite">
+      <img class="page active" src="page-01.png" alt="《三下碰拳以后》封面">
+      <img class="page" src="page-02.png" alt="听说明早是鹿爷爷送，噜噜钻进爸爸怀里，说只要爸爸送">
+      <img class="page" src="page-03.png" alt="爸爸收回很多办法，回应噜噜想多陪一会儿的心情">
+      <img class="page" src="page-04.png" alt="爸爸说明固定安排：鹿爷爷送，下午点心后爸爸来接">
+      <img class="page" src="page-05.png" alt="噜噜可以难过，并在袜子和围巾之间做选择">
+      <img class="page" src="page-06.png" alt="噜噜选黄色围巾，和爸爸按顺序准备明天">
+      <img class="page" src="page-07.png" alt="第二天噜噜仍舍不得，爸爸没有再讲很多话">
+      <img class="page" src="page-08.png" alt="父子碰拳三下，爸爸说完约定后出发">
+      <img class="page" src="page-09.png" alt="噜噜一边想爸爸，一边在幼儿园铺小车的路">
+      <img class="page" src="page-10.png" alt="爸爸准时来接，并先问噜噜现在是否想抱抱">
+    </section>
+    <nav aria-label="翻页">
+      <button id="prev" type="button">上一页</button>
+      <span class="count" id="count">1 / 10</span>
+      <button id="next" type="button">下一页</button>
+    </nav>
+  </main>
+  <script>
+    const pages = [...document.querySelectorAll('.page')];
+    const prev = document.querySelector('#prev');
+    const next = document.querySelector('#next');
+    const count = document.querySelector('#count');
+    let current = 0;
+    function show(index) {
+      current = Math.max(0, Math.min(pages.length - 1, index));
+      pages.forEach((page, i) => page.classList.toggle('active', i === current));
+      count.textContent = `${current + 1} / ${pages.length}`;
+      prev.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+    }
+    prev.addEventListener('click', () => show(current - 1));
+    next.addEventListener('click', () => show(current + 1));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(current - 1);
+      if (event.key === 'ArrowRight' || event.key === ' ') show(current + 1);
+    });
+    let startX = null;
+    document.addEventListener('touchstart', (event) => { startX = event.changedTouches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', (event) => {
+      if (startX === null) return;
+      const delta = event.changedTouches[0].clientX - startX;
+      if (Math.abs(delta) > 45) show(current + (delta < 0 ? 1 : -1));
+      startX = null;
+    }, { passive: true });
+    show(0);
+  </script>
+</body>
+</html>
