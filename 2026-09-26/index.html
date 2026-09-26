@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>2026-09-26 科普绘本《三三号的小桥》</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#eee3ce;color:#473b30;font-family:system-ui,sans-serif}
+body{height:100dvh;display:grid;grid-template-rows:minmax(0,1fr) auto;padding:12px 12px calc(8vh + env(safe-area-inset-bottom));overflow:hidden}
+main{min-height:0;min-width:0;display:flex;align-items:center;justify-content:center}
+img{display:block;width:100%;height:100%;object-fit:contain;min-height:0;touch-action:pan-y}
+nav{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 0 0;min-height:54px}
+button,a{font:inherit;color:inherit;border:1px solid #b9aa92;border-radius:9px;background:#fff8ec;padding:10px 16px;text-decoration:none;min-height:44px}
+button:disabled{opacity:.35}output{min-width:65px;text-align:center;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<main><img id="page" src="page-01.png" alt="三三号的小桥"></main>
+<nav aria-label="翻页"><a href="../">书架</a><button id="prev" aria-label="上一页" disabled>上一页</button><output id="count" aria-live="polite">1 / 12</output><button id="next" aria-label="下一页">下一页</button></nav>
+<script>
+const pages=[{"src":"page-01.png","alt":"三三号的小桥"},{"src":"page-02.png","alt":"傍晚，蓬蓬给红色火车挂上两张“三”字纸牌。“它叫三三号！”他把绒布熊安安放进车厢，答应送它回窗边的小屋。"},{"src":"page-03.png","alt":"一条蓝布河横在轨道中间。蓬蓬轻轻推车，车轮却停在河边。安安歪着脑袋，好像在问：我们怎么回家呢？"},{"src":"page-04.png","alt":"爸爸拿来两袋一样长的木板。蓬蓬每袋都数到三，看见车牌便喊：“三和三，是三十三！要那么多才够吧？”"},{"src":"page-05.png","alt":"他翻遍篮子，也没找到那么多木板。蓬蓬的耳朵垂下来，把安安抱进怀里：“我答应送它回家的。”"},{"src":"page-06.png","alt":"爸爸没有摘掉车牌，只在河边坐下：“三三号是你的好名字。要搭桥，我们看看手里到底有多少木板，好不好？”"},{"src":"page-07.png","alt":"蓬蓬一块一块搬出木板：“这里三块，那里也三块。”两堆木板排好了，像两队等着过河的小乘客。"},{"src":"page-08.png","alt":"他把两堆推到一起，指尖挨个点：“一、二、三、四、五、六！”没有新木板冒出来，三块和三块合起来，共有六块。"},{"src":"page-09.png","alt":"他先铺上三块，小桥只到河中间，火车还过不去。蓬蓬看看剩下的三块，喊道：“另一队也来帮忙！”"},{"src":"page-10.png","alt":"后面三块接着排上去，小桥终于连到对岸。蓬蓬扶稳火车，爸爸扶着桥边，车轮咔嗒咔嗒走过六块木板。"},{"src":"page-11.png","alt":"到小屋了！蓬蓬替安安掖好小毯子，又回头看火车：“三三号，今天你载它过了六块木板！”车牌还好好挂着。"},{"src":"page-12.png","alt":"爸爸轻轻碰了碰他的耳朵：“朋友到家了。”蓬蓬靠在爸爸身边。三三号名字没变，安安回家的路，有了一座刚刚好的小桥。"}];
+let current=0;
+const pic=document.getElementById('page'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
+function show(n){current=Math.max(0,Math.min(pages.length-1,n));pic.src=pages[current].src;pic.alt=pages[current].alt;prev.disabled=current===0;next.disabled=current===pages.length-1;count.textContent=(current+1)+' / '+pages.length;}
+prev.addEventListener('click',()=>show(current-1));next.addEventListener('click',()=>show(current+1));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')show(current+1);if(e.key==='ArrowLeft')show(current-1);});
+let startX=0;pic.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX;},{passive:true});
+pic.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>60)show(current+(dx<0?1:-1));},{passive:true});
+</script>
+</body>
+</html>
+
