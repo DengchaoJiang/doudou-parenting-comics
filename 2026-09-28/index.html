@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>2026-09-28 科普绘本《粉色沙子的小车站》</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #17212a; color: #fff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100dvh; }
+    main { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 12px calc(8vh + env(safe-area-inset-bottom)); }
+    img { display: block; max-width: min(100%, 1180px); max-height: calc(92dvh - 110px - env(safe-area-inset-bottom)); width: auto; height: auto; object-fit: contain; box-shadow: 0 8px 32px #0008; }
+    nav { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 14px; min-height: 54px; }
+    button { min-width: 70px; min-height: 48px; border: 1px solid #bac7ca; border-radius: 12px; background: #2b3c47; color: #fff; font-size: 23px; touch-action: manipulation; }
+    button:disabled { opacity: .35; }
+    output { min-width: 70px; text-align: center; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <main>
+    <img id="page" src="page-01.png" alt="粉色沙子的小车站。小水獭阿沐和爸爸，在雨天搭起一座会等火车的纸盒车站。" width="1448" height="1086">
+    <nav aria-label="翻页">
+      <button id="prev" type="button" aria-label="上一页" disabled>←</button>
+      <output id="count">1 / 11</output>
+      <button id="next" type="button" aria-label="下一页">→</button>
+    </nav>
+  </main>
+  <script>
+    const prose = [
+      "粉色沙子的小车站。小水獭阿沐和爸爸，在雨天搭起一座会等火车的纸盒车站。",
+      "雨敲着窗，阿沐和爸爸用纸盒搭火车站。他把透明沙漏立在站台，说：‘粉色沙子落完，小火车就出发！’",
+      "阿沐翻过沙漏，粉色沙粒穿过中间的小口，像一条细细的小溪。他趴近了问：‘爸爸，谁在下面拉它们？’",
+      "阿沐把沙漏横放，粉色小溪忽然停了。沙粒挤在一侧，像等车的小旅客。他皱起眉：‘糟了，车站钟坏啦！’",
+      "爸爸问：‘要不要扶起来试试？’沙漏站直后，沙粒又挤过窄口。阿沐看见上面渐渐变少，下面堆起小山。",
+      "‘它们为什么只往下走？’爸爸松开手中的纸叶，纸叶晃了两下，落到地毯。阿沐笑了：‘地球在把它们往下拉！’",
+      "阿沐把轨道一头垫上薄书，想让火车自己跑。小车向下一溜，咚地撞到纸盒站。爸爸扶住车站：‘坡放低一点再试。’",
+      "第二次，小火车稳稳穿过隧道。阿沐却发现沙子快落完了：‘车还没到，钟先到了！’爸爸问：‘它在帮我们，还是追我们？’",
+      "阿沐把沙漏放在终点旁：‘让它陪我看车跑吧。’他扶正轨道，等火车停稳，才把沙漏翻过来，开始新的一趟。",
+      "爸爸当售票员，阿沐当司机。沙子从上面落到下面，火车从小坡滑向站台；两条路都朝下，一条细细的，一条咕噜响。",
+      "雨停了，纸盒屋顶亮起一块夕阳。阿沐把票递给爸爸：‘下一班车前，再翻一次瀑布钟吧。’爸爸坐好，等他喊‘开车！’"
+    ];
+    let current = 0;
+    const img = document.getElementById("page");
+    const count = document.getElementById("count");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    function show(index) {
+      current = Math.max(0, Math.min(prose.length - 1, index));
+      img.src = `page-${String(current + 1).padStart(2, "0")}.png`;
+      img.alt = prose[current];
+      count.textContent = `${current + 1} / ${prose.length}`;
+      prev.disabled = current === 0;
+      next.disabled = current === prose.length - 1;
+    }
+    prev.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight") show(current + 1);
+    });
+    let touchX = null;
+    img.addEventListener("touchstart", event => { touchX = event.touches[0].clientX; }, { passive: true });
+    img.addEventListener("touchend", event => {
+      if (touchX === null) return;
+      const delta = event.changedTouches[0].clientX - touchX;
+      if (Math.abs(delta) > 45) show(current + (delta < 0 ? 1 : -1));
+      touchX = null;
+    }, { passive: true });
+  </script>
+</body>
+</html>
