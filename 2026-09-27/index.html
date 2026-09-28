@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>2026-09-27 科普绘本《橙汁拐了个弯》</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#eee3ce;color:#473b30;font-family:system-ui,sans-serif}
+body{height:100dvh;display:grid;grid-template-rows:minmax(0,1fr) auto;padding:12px 12px calc(8vh + env(safe-area-inset-bottom));overflow:hidden}
+main{min-height:0;min-width:0;display:flex;align-items:center;justify-content:center}
+img{display:block;width:100%;height:100%;object-fit:contain;min-height:0;touch-action:pan-y}
+nav{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 0 0;min-height:54px}
+button,a{font:inherit;color:inherit;border:1px solid #b9aa92;border-radius:9px;background:#fff8ec;padding:10px 16px;text-decoration:none;min-height:44px}
+button:disabled{opacity:.35}output{min-width:65px;text-align:center;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<main><img id="page" src="page-01.png" alt="橙汁拐了个弯"></main>
+<nav aria-label="翻页"><a href="../">书架</a><button id="prev" aria-label="上一页" disabled>上一页</button><output id="count" aria-live="polite">1 / 12</output><button id="next" aria-label="下一页">下一页</button></nav>
+<script>
+const pages=[{"src":"page-01.png","alt":"橙汁拐了个弯"},{"src":"page-02.png","alt":"爸爸在旁边切苹果。插着吸管的橙汁盒停在车道旁，像一座高高的车站，挡住了纸车的路。"},{"src":"page-03.png","alt":"阿禾不想碰坏纸桥，便伸手去挪橙汁盒。盒子有点满，他两只手正好按住了鼓鼓的中间。"},{"src":"page-04.png","alt":"“噗！”一道橙色的小水线从吸管口冲出来，拐了一个弯，落在纸桥上。阿禾赶紧松开手。"},{"src":"page-05.png","alt":"纸桥湿了一角，小车停在半路。阿禾的鼻子酸酸的：“我答应送纸苹果过去的，可桥坏了。”"},{"src":"page-06.png","alt":"爸爸先扶稳盒子，擦干桌面，把小车放到干处。他坐到阿禾身边问：“你看见橙汁从哪里出来了吗？”"},{"src":"page-07.png","alt":"阿禾指着吸管：“它自己跳出来了？”爸爸把空盒冲净，装一点清水，再插好吸管，放进浅浅的托盘。"},{"src":"page-08.png","alt":"阿禾只轻轻托住盒子两边。吸管安安静静，一滴水也没出来。他歪着头，又看了看湿掉的纸桥。"},{"src":"page-09.png","alt":"爸爸扶稳托盘，阿禾慢慢按了一下盒子中间。清水沿吸管往上走，滴进托盘。“是我的手让它跑出来的！”"},{"src":"page-10.png","alt":"“盒子被挤，留给水的地方变小了，水就从吸管出来。”爸爸说。阿禾把盒子放稳，决定先修桥。"},{"src":"page-11.png","alt":"他们接上一小条干纸。橙汁的弯痕干成浅金色小河，阿禾又画了新桥，让纸车载着纸苹果过河。"},{"src":"page-12.png","alt":"纸车终于到了窗边。阿禾轻轻托住清水盒两边，把它放回托盘：“今天的小河不会再乱跑了。”"}];
+let current=0;
+const pic=document.getElementById('page'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
+function show(n){current=Math.max(0,Math.min(pages.length-1,n));pic.src=pages[current].src;pic.alt=pages[current].alt;prev.disabled=current===0;next.disabled=current===pages.length-1;count.textContent=(current+1)+' / '+pages.length;}
+prev.addEventListener('click',()=>show(current-1));next.addEventListener('click',()=>show(current+1));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')show(current+1);if(e.key==='ArrowLeft')show(current-1);});
+let startX=0;pic.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX;},{passive:true});
+pic.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>60)show(current+(dx<0?1:-1));},{passive:true});
+</script>
+</body>
+</html>
