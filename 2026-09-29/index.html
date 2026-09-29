@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>2026-09-29 科普绘本《小狐的太阳轮子》</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #17212a; color: #fff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100dvh; }
+    main { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 12px calc(8vh + env(safe-area-inset-bottom)); }
+    img { display: block; max-width: min(100%, 1180px); max-height: calc(92dvh - 110px - env(safe-area-inset-bottom)); width: auto; height: auto; object-fit: contain; box-shadow: 0 8px 32px #0008; }
+    nav { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 14px; min-height: 54px; }
+    button { min-width: 70px; min-height: 48px; border: 1px solid #bac7ca; border-radius: 12px; background: #2b3c47; color: #fff; font-size: 23px; touch-action: manipulation; }
+    button:disabled { opacity: .35; }
+    output { min-width: 70px; text-align: center; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <main>
+    <img id="page" src="page-01.png" alt="小狐的太阳轮子。午后的阳光落在窗台上，栗栗准备给爸爸送一封特别的信。" width="1448" height="1086">
+    <nav aria-label="翻页">
+      <button id="prev" type="button" aria-label="上一页" disabled>←</button>
+      <output id="count">1 / 11</output>
+      <button id="next" type="button" aria-label="下一页">→</button>
+    </nav>
+  </main>
+  <script>
+    const prose = [
+      "小狐的太阳轮子。午后的阳光落在窗台上，栗栗准备给爸爸送一封特别的信。",
+      "小狐栗栗找到一个空纸盒，要做送信车。他画了四个太阳，圆脸外伸着尖尖的光：‘正好给车做四个轮子！’",
+      "爸爸问：‘你说的边，是中间这一圈，还是外面的尖尖？’栗栗指指光芒，又指圆脸：‘都有！我要用整个太阳。’",
+      "爸爸帮他装上四个太阳轮，把画好的信放进车厢。栗栗刚一推，小车咚咚跳了两下，信从车上滑到地毯。",
+      "栗栗鼓起脸：‘一定是地板不平！’爸爸摸摸平平的地板：‘先让一个轮子自己走走，看看它怎么走。’",
+      "太阳纸轮轻轻滚开，尖角碰到地板时停了一瞬，又往前一扑。栗栗蹲近看：‘它一会儿高，一会儿低！’",
+      "爸爸递来一个圆罐盖。栗栗沿边摸了一圈，没碰到尖角；他一推，盖子咕噜噜滚过地毯边，到了小车旁。",
+      "‘圆圆的边走得真顺，’栗栗说，‘可尖尖的光也很好看呀。’爸爸捡起信：‘轮子要跑，光芒可以坐车顶。’",
+      "栗栗自己选四个圆纸轮，又把四个太阳贴在车顶和车身。尖尖的光没有丢，圆圆的轮子也有自己的工作。",
+      "他压好信，再推一次。小车不跳了，稳稳从窗台下驶到爸爸脚边。爸爸打开信，看见画里的小车坐着他们俩。",
+      "栗栗趴在地上笑：‘太阳做乘客，比做轮子舒服！’爸爸把信收进衣袋，请他发下一班车，栗栗又找来一张纸。"
+    ];
+    let current = 0;
+    const img = document.getElementById("page");
+    const count = document.getElementById("count");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    function show(index) {
+      current = Math.max(0, Math.min(prose.length - 1, index));
+      img.src = `page-${String(current + 1).padStart(2, "0")}.png`;
+      img.alt = prose[current];
+      count.textContent = `${current + 1} / ${prose.length}`;
+      prev.disabled = current === 0;
+      next.disabled = current === prose.length - 1;
+    }
+    prev.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight") show(current + 1);
+    });
+    let touchX = null;
+    img.addEventListener("touchstart", event => { touchX = event.touches[0].clientX; }, { passive: true });
+    img.addEventListener("touchend", event => {
+      if (touchX === null) return;
+      const delta = event.changedTouches[0].clientX - touchX;
+      if (Math.abs(delta) > 45) show(current + (delta < 0 ? 1 : -1));
+      touchX = null;
+    }, { passive: true });
+  </script>
+</body>
+</html>
