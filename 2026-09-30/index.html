@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>2026-09-30 科普绘本《小獾的卷卷面》</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #17212a; color: #fff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100dvh; }
+    main { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 12px calc(8vh + env(safe-area-inset-bottom)); }
+    img { display: block; max-width: min(100%, 1180px); max-height: calc(92dvh - 110px - env(safe-area-inset-bottom)); width: auto; height: auto; object-fit: contain; box-shadow: 0 8px 32px #0008; }
+    nav { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 14px; min-height: 54px; }
+    button { min-width: 70px; min-height: 48px; border: 1px solid #bac7ca; border-radius: 12px; background: #2b3c47; color: #fff; font-size: 23px; touch-action: manipulation; }
+    button:disabled { opacity: .35; }
+    output { min-width: 70px; text-align: center; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <main>
+    <img id="page" src="page-01.png" alt="小獾的卷卷面。下午，阿沐和爸爸在厨房做面；他看着长长的面带，想起面包店橱窗里的螺旋面包。" width="1448" height="1086">
+    <nav aria-label="翻页">
+      <button id="prev" type="button" aria-label="上一页" disabled>←</button>
+      <output id="count">1 / 11</output>
+      <button id="next" type="button" aria-label="下一页">→</button>
+    </nav>
+  </main>
+  <script>
+    const prose = [
+      "小獾的卷卷面。下午，阿沐和爸爸在厨房做面；他看着长长的面带，想起面包店橱窗里的螺旋面包。",
+      "阿沐把一小团面按扁，擀成细长的一条：‘我要做一个会转圈的卷卷！’爸爸伸出手，他却把面条护在手心：‘你先看，我教你。’",
+      "他捏住一端，慢慢往里卷。卷到另一端时，桌上出现一只胖胖的小蜗牛；爸爸照着卷，卷出来的却像一顶歪帽子。",
+      "阿沐笑得肩膀一抖：‘等会儿再教你一次！’他们聊着卷卷该送给谁，桌上另一条面带一直敞着，谁也没去动它。",
+      "阿沐拿起那条面带，想再卷一只小蜗牛。面带却在他手里裂开；他愣住，眉毛垂下来：‘刚才它明明会弯呀。’",
+      "爸爸没有把碎面藏起来，让阿沐摸摸两块面：桌上这条硬硬的，碗里盖着布的那团软软的。阿沐把它们并排按下去，只有软的留下圆圆指印。",
+      "‘它们本来一样吗？’阿沐问。爸爸点头：‘敞着的面，有些水慢慢跑到空气里；盖住的那团，水跑得慢。’硬面边缘还掉下了小屑。",
+      "阿沐给碎面点上几滴水，搓了搓。它没有马上变回原样，却不那么容易掉屑了。‘送给爸爸的卷卷，我还是想用软的。’",
+      "他从盖着的碗里取一小块，把剩下的面盖好，又擀出一条柔软的新面带。阿沐指着开头说：‘先从这儿卷，别急。’",
+      "爸爸跟着卷，卷到一半停住：‘我又歪了。’阿沐看看自己那只，也有一点歪：‘歪着也能卷，往里收一点就行。’两只小蜗牛并排待在盘上。",
+      "阿沐把自己做的小蜗牛推给爸爸：‘这个送你，是我教出来的。’爸爸问下次忘了怎么办；阿沐压好盖布，眨眨眼：‘先别让面变硬，再慢慢卷。’"
+    ];
+    let current = 0;
+    const img = document.getElementById("page");
+    const count = document.getElementById("count");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    function show(index) {
+      current = Math.max(0, Math.min(prose.length - 1, index));
+      img.src = `page-${String(current + 1).padStart(2, "0")}.png`;
+      img.alt = prose[current];
+      count.textContent = `${current + 1} / ${prose.length}`;
+      prev.disabled = current === 0;
+      next.disabled = current === prose.length - 1;
+    }
+    prev.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft") show(current - 1);
+      if (event.key === "ArrowRight") show(current + 1);
+    });
+    let touchX = null;
+    img.addEventListener("touchstart", event => { touchX = event.touches[0].clientX; }, { passive: true });
+    img.addEventListener("touchend", event => {
+      if (touchX === null) return;
+      const delta = event.changedTouches[0].clientX - touchX;
+      if (Math.abs(delta) > 45) show(current + (delta < 0 ? 1 : -1));
+      touchX = null;
+    }, { passive: true });
+  </script>
+</body>
+</html>
