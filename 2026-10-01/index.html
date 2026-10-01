@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2026-10-01 科普绘本《两张雪地车票》</title>
+<style>
+:root { color-scheme: dark; font-family: system-ui, sans-serif; background: #17212a; color: #fff; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100dvh; }
+main { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 12px calc(8vh + env(safe-area-inset-bottom)); }
+img { display: block; max-width: min(100%, 1180px); max-height: calc(92dvh - 110px - env(safe-area-inset-bottom)); width: auto; height: auto; object-fit: contain; box-shadow: 0 8px 32px #0008; }
+nav { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 14px; min-height: 54px; }
+button { min-width: 70px; min-height: 48px; border: 1px solid #bac7ca; border-radius: 12px; background: #2b3c47; color: #fff; font-size: 23px; touch-action: manipulation; }
+button:disabled { opacity: .35; }
+output { min-width: 70px; text-align: center; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+<img id="page" src="page-01.png" alt="两张雪地车票。小兔米米的纸巴士准备出发了。他想请两位雪地朋友一起吃点心，可是，他们的家在哪里呢？" width="1448" height="1086">
+<nav aria-label="翻页"><button id="prev" type="button" aria-label="上一页" disabled>←</button><output id="count">1 / 11</output><button id="next" type="button" aria-label="下一页">→</button></nav>
+</main>
+<script>
+const prose = [
+  "两张雪地车票。小兔米米的纸巴士准备出发了。他想请两位雪地朋友一起吃点心，可是，他们的家在哪里呢？",
+  "小兔男孩米米给纸巴士添上最后一张座椅，又画了两张雪地车票。一张给北极熊，一张给帝企鹅。“它们住在同一个雪地里吧？”他问爸爸。爸爸没有马上回答，陪他把地球仪抱到桌上。",
+  "米米把两张车票叠起来：“一起上车，就能一起吃点心！”爸爸指着地球仪的北边：“北极熊生活在北极地区。”接着，他把手指移到南边：“帝企鹅生活在南极洲。”米米的手指跟过去，转了好大半圈。",
+  "“可是它们家都有雪呀。”米米把纸巴士推到地球仪旁。爸爸说：“都有雪，不代表住在一起。北极和南极是地球两端的不同地方。”米米低头看车票。两张票画得那么近，两位乘客的家却那么远。",
+  "他把两张票揉成小团：“那我的点心车开不成了！”爸爸没有拿走纸巴士：“你很想让大家坐在一起。我们可以先想想，车票要寄到哪里。”米米把一张小纸团慢慢摊开，纸上留下几条皱皱的路。",
+  "爸爸找到两张动物图片。北极熊的脚踩在北方的海冰上，帝企鹅站在南极的冰雪里。米米看了很久，说：“它们真的不是邻居。”他把北极熊的车票放在地球仪北边，把帝企鹅的车票放在南边。",
+  "米米又问：“企鹅是不是全都住南极？”爸爸说：“不是。有些企鹅生活在别的地方。我们画的这种帝企鹅，才住在南极洲。”米米给车票添上三个字：帝企鹅。这回，他知道票要送给谁了。",
+  "米米重新拿起蜡笔。他给北极熊画了一封信，给帝企鹅画了另一封。每封信里都有一块小小的点心图画。“不能一起上车，也可以分别收到我的邀请。”他把两封信摆在纸巴士旁，心里不再那么堵了。",
+  "“要把真动物接回家吗？”爸爸问。米米摇摇头：“这是纸上的旅行。它们留在自己的家。”他在桌上铺开两张地图，先让纸巴士在北边停一站，再到南边停一站。两次停靠，两次轻轻按响想象里的喇叭。",
+  "到了最后一站，米米发现爸爸那张座椅还空着。他拍拍椅背：“爸爸，你坐这里，陪我看地图。”爸爸靠过来。米米把两张车票重新排好，一张在北，一张在南，中间留下长长的一段路。",
+  "收车时，米米没有把车票叠在一起。他把它们夹在画册的两页里。“明天再开车，就不会找错家了。”爸爸替他扶住纸巴士。窗外的天渐渐暗了，画册里，两位远远的雪地朋友各自有了一封信。"
+];
+let current = 0;
+const img = document.getElementById("page");
+const count = document.getElementById("count");
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
+function show(index) {
+current = Math.max(0, Math.min(prose.length - 1, index));
+img.src = "page-" + String(current + 1).padStart(2, "0") + ".png";
+img.alt = prose[current];
+count.textContent = (current + 1) + " / " + prose.length;
+prev.disabled = current === 0;
+next.disabled = current === prose.length - 1;
+}
+prev.addEventListener("click", () => show(current - 1));
+next.addEventListener("click", () => show(current + 1));
+document.addEventListener("keydown", event => {
+if (event.key === "ArrowLeft") show(current - 1);
+if (event.key === "ArrowRight") show(current + 1);
+});
+let touchX = null;
+img.addEventListener("touchstart", event => { touchX = event.touches[0].clientX; }, { passive: true });
+img.addEventListener("touchend", event => {
+if (touchX === null) return;
+const delta = event.changedTouches[0].clientX - touchX;
+if (Math.abs(delta) > 45) show(current + (delta < 0 ? 1 : -1));
+touchX = null;
+}, { passive: true });
+</script>
+</body>
+</html>
