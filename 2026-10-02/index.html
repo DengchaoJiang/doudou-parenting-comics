@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2026-10-02 科普绘本《纸桥长出两道边》</title>
+<style>
+:root { color-scheme: dark; font-family: system-ui, sans-serif; background: #17212a; color: #fff; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100dvh; }
+main { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 12px calc(8vh + env(safe-area-inset-bottom)); }
+img { display: block; max-width: min(100%, 1180px); max-height: calc(92dvh - 110px - env(safe-area-inset-bottom)); width: auto; height: auto; object-fit: contain; box-shadow: 0 8px 32px #0008; }
+nav { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 14px; min-height: 54px; }
+button { min-width: 70px; min-height: 48px; border: 1px solid #bac7ca; border-radius: 12px; background: #2b3c47; color: #fff; font-size: 23px; touch-action: manipulation; }
+button:disabled { opacity: .35; }
+output { min-width: 70px; text-align: center; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+<img id="page" src="page-01.png" alt="《纸桥长出两道边》一辆纸货车，一座会变样的桥，和栗栗想亲手完成的送餐任务。" width="1448" height="1086">
+<nav aria-label="翻页"><button id="prev" type="button" aria-label="上一页" disabled>←</button><output id="count">1 / 12</output><button id="next" type="button" aria-label="下一页">→</button></nav>
+</main>
+<script>
+const prose = [
+  "《纸桥长出两道边》一辆纸货车，一座会变样的桥，和栗栗想亲手完成的送餐任务。",
+  "栗栗把一条蓝布铺在地毯上，弯弯的河就流进了客厅。河这边停着一辆轻轻的纸货车，河那边是他搭的小车站。今天，货车要给车站送两只纸包子。",
+  "他搬来两个矮盒子当桥墩，把一张灰纸架在中间。“上面走汽车，下面走火车！”栗栗趴下来瞧。小火车能钻过去，货车却还停在桥头。",
+  "爸爸伸手想把桥墩挪近一点。栗栗急忙拦住：“再近，火车就过不去了！”爸爸收回手，问：“那你想让我帮哪里？”栗栗指着桥头：“扶这里，我来开。”",
+  "纸货车开到桥中间，平平的纸面慢慢弯了下去。爸爸托住滑下来的车，车没掉进蓝布河。栗栗捏着桥边，小声说：“车站还等着包子呢。”",
+  "爸爸没有替他重搭，只把车停回河岸。“你想先改哪一处？”栗栗看着软软的纸，忽然把一条长边折起来，又摸摸另一边：“也让它站起来吧。”",
+  "爸爸扶着纸，栗栗沿折痕一点点压平。灰纸的两条长边竖起来，中间留下了一条车道，像一只没有盖子的长盒子。“这回车轮走中间！”栗栗说。",
+  "他们把折好的纸放回原来的桥墩，桥墩没有挪，试的还是刚才那辆车。栗栗又担心起来：“会不会还往下弯？”爸爸说：“我在旁边接着，你慢慢开。”",
+  "纸货车轻轻驶到桥中央，停住了。这次桥面只微微动了一下，没有像刚才那样垂下去。栗栗松开攥紧的爪子：“还是那张纸呀，怎么能托住了？”",
+  "爸爸指指两条竖起的边：“纸换了个样子，有了站起来的边，就不那么容易向下弯了。”栗栗摸摸折痕，笑了：“我给桥长了两道边！”",
+  "他先放一只纸包子上车，试过桥，再回来运第二只。爸爸只扶着桥头，司机一直是栗栗。等两只包子都到了，车站门口的空盘子终于满了。",
+  "栗栗把一个纸包子递给爸爸：“这个是给你的。”蓝布河上，小火车从桥下慢慢钻过，货车在桥头歇着。爸爸问：“桥留下吗？”栗栗点点头：“明天还要送早餐。”"
+];
+let current = 0;
+const img = document.getElementById("page");
+const count = document.getElementById("count");
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
+function show(index) {
+current = Math.max(0, Math.min(prose.length - 1, index));
+img.src = "page-" + String(current + 1).padStart(2, "0") + ".png";
+img.alt = prose[current];
+count.textContent = (current + 1) + " / " + prose.length;
+prev.disabled = current === 0;
+next.disabled = current === prose.length - 1;
+}
+prev.addEventListener("click", () => show(current - 1));
+next.addEventListener("click", () => show(current + 1));
+document.addEventListener("keydown", event => {
+if (event.key === "ArrowLeft") show(current - 1);
+if (event.key === "ArrowRight") show(current + 1);
+});
+let touchX = null;
+img.addEventListener("touchstart", event => { touchX = event.touches[0].clientX; }, { passive: true });
+img.addEventListener("touchend", event => {
+if (touchX === null) return;
+const delta = event.changedTouches[0].clientX - touchX;
+if (Math.abs(delta) > 45) show(current + (delta < 0 ? 1 : -1));
+touchX = null;
+}, { passive: true });
+</script>
+</body>
+</html>
