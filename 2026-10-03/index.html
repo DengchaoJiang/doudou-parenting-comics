@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>2026-10-03 科普绘本《松果把窗户关上了》</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#edf0e8;color:#243d33;font-family:system-ui,sans-serif}main{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 12px calc(8vh + env(safe-area-inset-bottom))}img{max-width:min(100%,1180px);max-height:calc(92dvh - 110px - env(safe-area-inset-bottom));width:auto;height:auto;object-fit:contain}nav{display:flex;align-items:center;gap:24px;margin-top:14px;min-height:54px}button{min-width:70px;min-height:48px;border:1px solid #adb9ae;background:#fff;border-radius:12px;color:inherit;font-size:23px}button:disabled{opacity:.35}#count{min-width:60px;text-align:center;font-size:18px}</style></head>
+<body><main><img id="page" src="page-01.png" alt="松果把窗户关上了"><nav aria-label="翻页"><button id="prev" aria-label="上一页" disabled>←</button><span id="count" aria-live="polite">1 / 12</span><button id="next" aria-label="下一页">→</button></nav></main>
+<script>
+const prose=["松果把窗户关上了","沐沐在落叶路上找到一颗张开的松果，像开满窗户的小木楼。他轻轻装上蓝色货车：“爸爸，这是谁的房子？”爸爸说：“种子曾住在这些鳞片之间。”","父子俩把松果放进窗边的托盘。傍晚，雨敲响玻璃，沐沐想让它听听雨声。爸爸陪他把托盘搬到门口台阶，溅来的雨水还是把松果打湿了。","晚饭后，沐沐来接松果，却发现鳞片挨得紧紧的。“窗户怎么关了？它不喜欢我的车吗？”他心里有点慌。爸爸坐到旁边：“先看看，不急着掰开。”","沐沐摸摸托盘边的水滴。爸爸说：“潮湿时，鳞片会合起来，干了又会张开。”“真的还会开？”沐沐仍不放心。爸爸说：“我们等它干，再一起看。”","他们把松果接回室内，放在干爽通风的窗边。沐沐画下那些细细的缝，把画放在托盘旁，货车也停在那里。“明早再看。”他忍住了掰开的念头。","第二天，沐沐跑到窗边，松果干了，鳞片又张开了！他比比昨晚的画，终于松了口气：“小窗户回来啦！”原来不是不喜欢货车，是湿了以后形状变了。","沐沐想再试，却护住松果：“不要弄湿我的！”爸爸点头：“你的留干，用我昨天捡的那颗试，好吗？”沐沐同意了。爸爸把自己的松果放进另一只托盘。","爸爸用常温水把自己的松果浸湿，倒去多余的水。沐沐选好两张画纸：“这一颗画大缝，那一颗等会再画。”他们先吃早饭，再玩一会小车，不催松果。","过了一阵，湿松果渐渐合拢，干松果仍张着。沐沐把两张画并排：“不是你生气，也不是我惹你了！”爸爸笑了：“是鳞片遇到水，形状会变化。”","他们把湿松果留在通风处，慢慢晾干，不烤也不掰。后来，它也重新张开。沐沐让货车一次运一张观察画，排好三个样子：张开、合拢、又张开。","晚上，爸爸把松果收在安全的地方，留下三张画。沐沐靠着爸爸：“明天它关窗户，我也不急了，先看是不是湿了。”窗外又下起雨，他想知道明天会怎样。"];
+let current=0;
+const picture=document.getElementById('page'),previous=document.getElementById('prev'),next=document.getElementById('next'),counter=document.getElementById('count');
+function show(index){current=Math.max(0,Math.min(prose.length-1,index));picture.src='page-'+String(current+1).padStart(2,'0')+'.png';picture.alt=prose[current];counter.textContent=(current+1)+' / '+prose.length;previous.disabled=current===0;next.disabled=current===prose.length-1}
+previous.onclick=()=>show(current-1);next.onclick=()=>show(current+1);
+document.addEventListener('keydown',event=>{if(event.key==='ArrowRight')show(current+1);if(event.key==='ArrowLeft')show(current-1)});
+let touchStart=null;
+picture.addEventListener('touchstart',event=>{touchStart=event.changedTouches[0].clientX},{passive:true});
+picture.addEventListener('touchend',event=>{if(touchStart===null)return;const delta=event.changedTouches[0].clientX-touchStart;if(Math.abs(delta)>45)show(current+(delta<0?1:-1));touchStart=null},{passive:true});
+</script></body></html>
