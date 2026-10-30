@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>刷子差一点点｜2026-10-30</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#171f29;color:#fff;font-family:system-ui,sans-serif}
+main{height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:0 0 calc(8vh + env(safe-area-inset-bottom))}
+#page{display:block;max-width:100%;max-height:calc(100dvh - 8vh - env(safe-area-inset-bottom) - 64px);width:auto;height:auto;object-fit:contain;min-height:0}
+nav{height:44px;flex-shrink:0;display:flex;align-items:center;gap:20px}button{min-width:80px;height:44px;border:0;border-radius:8px;background:#fff3da;color:#152a3c;font-size:17px}button:disabled{opacity:.35}a{color:#fff3da}#counter{min-width:68px;text-align:center}
+</style></head><body><main><img id="page" src="page-01.png" alt=""><nav aria-label="翻页"><button id="prev" type="button">上一页</button><span id="counter" aria-live="polite"></span><button id="next" type="button">下一页</button><a href="../">书架</a></nav></main>
+<script>
+const prose=["《刷子差一点点》小兔淘淘搭了一座秋天车站。爸爸柏舟剪好大纸叶子，淘淘铺在路边，却把它们带到了路中央。绿色小巴停在站外：“乘客还在等呢！”", "淘淘推来蓝色扫地车，红柄软刷像一撮神气的胡须。“嗡——清扫车来了！”车轮跑过去，纸叶子却没挪窝。他倒回来再推一遍，叶子还是躺着。", "“它是不是没力气？”淘淘皱起鼻子。爸爸蹲下：“看看哪一部分碰到了叶子。”淘淘也趴低看，车轮压着地面，刷毛却悬在上方，中间留着一道小缝。", "“刷子没有碰到呀！”淘淘指着小缝。爸爸取下刷子，先举高扫过，再落到地上轻扫。纸叶子终于滑动了。淘淘笑起来：“碰到了，才能把它推走！”", "爸爸把刷子放回小车，调低一点，重新固定好。“只改这一点，再试试。”淘淘慢慢推车，红刷毛轻轻弯了弯，两片纸叶子动了，一片却卡在前轮下面。", "“还是坏了！”淘淘泄气地停住。爸爸说：“刷子已经推得动了，这片是卡住了。”他们停稳小车，爸爸取出纸叶子，放回前面。淘淘说：“这次慢慢开。”", "淘淘让刷子先碰到叶子，再一小段一小段往前推。黄叶、橙叶聚成一团秋天。小巴有路可走了，他却拦住它：“等一下，叶子不能留在车站门口。”", "爸爸拿来小簸箕，淘淘停好车，用软刷把纸叶子扫进去。最后一片总溜走。爸爸把簸箕口贴平地面，淘淘又扫一下，叶子进去了！他们把叶子收进盒子。", "“开门啦！”淘淘推着小巴慢慢进站。爸爸扮成旅客：“谢谢，今天的路真好走。”淘淘挺起胸口，又看看刷子：“它不是没有力气，是差了一点点。”", "玩完，爸爸把软刷装回车上，淘淘把它抬高：“现在让它休息。”爸爸检查好固定夹。淘淘盖好纸叶盒，留一片橙叶靠着车站：“明天还要造新的路。”", "夜色落到窗外，两辆车并排停好。淘淘靠着爸爸，用手指比出小缝：“先碰得到，再推得动。”爸爸说：“是你蹲下来，看见了差在哪里。”小车站也收工了。"];
+let current=0;
+const image=document.querySelector('#page'),prev=document.querySelector('#prev'),next=document.querySelector('#next'),counter=document.querySelector('#counter');
+function show(n){current=Math.max(0,Math.min(prose.length-1,n));image.src='page-'+String(current+1).padStart(2,'0')+'.png';image.alt=prose[current];counter.textContent=(current+1)+' / '+prose.length;prev.disabled=current===0;next.disabled=current===prose.length-1;}
+prev.addEventListener('click',()=>show(current-1));next.addEventListener('click',()=>show(current+1));document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')show(current+1);if(e.key==='ArrowLeft')show(current-1)});
+let startX;image.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX},{passive:true});image.addEventListener('touchend',e=>{const delta=e.changedTouches[0].clientX-startX;if(Math.abs(delta)>50)show(current+(delta<0?1:-1))},{passive:true});show(0);
+</script></body></html>
