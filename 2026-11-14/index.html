@@ -56,7 +56,7 @@
     const prev = document.querySelector("#prev");
     const next = document.querySelector("#next");
     const render = () => {
-      page.src = `page-${String(current + 1).padStart(2,"0")}.webp`;
+      page.src = current === 9 ? "page-10-r2.webp" : `page-${String(current + 1).padStart(2,"0")}.webp`;
       page.alt = prose[current];
       counter.textContent = `${current + 1} / ${prose.length}`;
       prev.disabled = current === 0;
@@ -76,7 +76,7 @@
       if (Math.abs(dx) > 50) move(dx < 0 ? 1 : -1);
     },{passive:true});
     render();
-    for (let i = 2; i <= prose.length; i++) { const img = new Image(); img.src = `page-${String(i).padStart(2,"0")}.webp`; }
+    for (let i = 2; i <= prose.length; i++) { const img = new Image(); img.src = i === 10 ? "page-10-r2.webp" : `page-${String(i).padStart(2,"0")}.webp`; }
   </script>
 </body>
 </html>
