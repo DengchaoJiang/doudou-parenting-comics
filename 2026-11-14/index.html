@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#21150f">
+  <title>沙漏流完，爸爸就回来</title>
+  <style>
+    :root { color-scheme: dark; font-family: -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #21150f; }
+    body { display: grid; grid-template-rows: auto 1fr auto; padding-bottom: env(safe-area-inset-bottom); }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .65rem max(1rem,env(safe-area-inset-left)); background: #2b1b13; color: #fff7e8; }
+    header a { color: #ffd99a; text-decoration: none; white-space: nowrap; }
+    h1 { margin: 0; font-size: clamp(1rem,2.4vw,1.45rem); text-align: center; }
+    #stage { min-height: 0; display: grid; place-items: center; padding: 1vh 1vw; touch-action: pan-y; }
+    #page { width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+    nav { min-height: calc(8vh + env(safe-area-inset-bottom)); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .8rem; padding: .5rem max(1rem,env(safe-area-inset-right)) calc(.5rem + env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background: #2b1b13; }
+    button { border: 0; border-radius: 999px; padding: .65rem 1rem; font-size: 1rem; background: #8a4f2a; color: white; cursor: pointer; }
+    button:last-child { justify-self: end; }
+    button:disabled { opacity: .35; cursor: default; }
+    #counter { color: #ffe1ae; font-variant-numeric: tabular-nums; }
+    @media (orientation: portrait) { header { padding-block: .45rem; } nav { min-height: calc(9vh + env(safe-area-inset-bottom)); } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../" aria-label="返回绘本目录">‹ 绘本目录</a>
+    <h1>沙漏流完，爸爸就回来</h1>
+    <span>2026-11-14</span>
+  </header>
+  <main id="stage">
+    <img id="page" src="page-01.webp" alt="《沙漏流完，爸爸就回来》">
+  </main>
+  <nav aria-label="翻页控制">
+    <button id="prev" type="button">上一页</button>
+    <span id="counter">1 / 10</span>
+    <button id="next" type="button">下一页</button>
+  </nav>
+  <script>
+    const prose = [
+      "《沙漏流完，爸爸就回来》",
+      "傍晚，小鼹鼠砾砾想去蘑菇商店买面粉，鼹鼠爸爸却要先修好一条旧毯子。",
+      "砾砾一会儿问“现在走吗”，一会儿又担心商店关门。爸爸越着急，手里的线越打结。",
+      "爸爸放下针线，蹲下来听他说完：“你怕来不及，也怕我一直忙，对不对？”砾砾点点头。",
+      "爸爸翻出小沙漏，又摆好三张图卡：“沙子落完，我就陪你穿外套，一起去商店。”",
+      "砾砾选择在旁边搭车库。他用纸板做屋顶，屋顶总滑下来，他换了两块更宽的积木。",
+      "沙漏空了，爸爸按约回到地毯上。他们一起扶稳屋顶，蓝色小车终于顺利开了进去。",
+      "出门时，蘑菇商店的灯还亮着。砾砾笑了：“原来担心可以说出来，时间也能看得见。”",
+      "回家后，爸爸还要收好针线。砾砾没有连声催问，只问：“请告诉我，你什么时候回来？”",
+      "短针走到约好的位置，爸爸果然回来了。他们让蓝色小车再次出发，车轮声咕噜噜地响。"
+    ];
+    let current = 0;
+    const page = document.querySelector("#page");
+    const counter = document.querySelector("#counter");
+    const prev = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+    const render = () => {
+      page.src = `page-${String(current + 1).padStart(2,"0")}.webp`;
+      page.alt = prose[current];
+      counter.textContent = `${current + 1} / ${prose.length}`;
+      prev.disabled = current === 0;
+      next.disabled = current === prose.length - 1;
+    };
+    const move = step => { current = Math.max(0,Math.min(prose.length - 1,current + step)); render(); };
+    prev.addEventListener("click",() => move(-1));
+    next.addEventListener("click",() => move(1));
+    document.addEventListener("keydown",e => {
+      if (e.key === "ArrowLeft") move(-1);
+      if (e.key === "ArrowRight" || e.key === " ") move(1);
+    });
+    let startX = 0;
+    document.querySelector("#stage").addEventListener("touchstart",e => { startX = e.changedTouches[0].clientX; },{passive:true});
+    document.querySelector("#stage").addEventListener("touchend",e => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50) move(dx < 0 ? 1 : -1);
+    },{passive:true});
+    render();
+    for (let i = 2; i <= prose.length; i++) { const img = new Image(); img.src = `page-${String(i).padStart(2,"0")}.webp`; }
+  </script>
+</body>
+</html>
