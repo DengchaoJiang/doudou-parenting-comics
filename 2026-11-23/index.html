@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>石路上的薄冰</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#262f3a;color:#fff6e3;font:18px system-ui}
+main{height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:0 8px calc(8vh + env(safe-area-inset-bottom))}
+img{object-fit:contain;max-width:100%;max-height:calc(100dvh - 8vh - env(safe-area-inset-bottom) - 60px)}
+nav{height:44px;flex-shrink:0;display:flex;align-items:center;gap:14px}
+a{color:#f4e0b3;padding:10px 3px}
+button{border:0;border-radius:8px;min-height:44px;padding:0 13px;background:#f4e0b3;color:#262f3a;font:inherit}
+button:disabled{opacity:.5}
+</style></head>
+<body><main><img id="page" src="page-01.webp" alt=""><nav aria-label="绘本阅读"><a href="../">首页</a><button id="prev">上一页</button><span id="count" aria-live="polite"></span><button id="next">下一页</button></nav></main>
+<script>
+const images=["page-01.webp","page-02.webp","page-03.webp","page-04.webp","page-05.webp","page-06.webp","page-07.webp","page-08.webp","page-09.webp","page-10.webp"],stories=["傍晚雨刚停。小雪兔团雪趴在窗边，看见石路上的水洼还在发亮。他问爸爸坡杉：“明天它们会结冰吗？”","团雪往两只一样的浅碟里各舀一勺水。爸爸把一只放到门外的矮凳上，另一只留在屋里的木桌上。","清早，团雪想起那两碟水，拖着小木车来到门边。屋里那只碟子一晃，水碰到碟边，荡开一圈圈细纹。","爸爸把门外的浅碟端到毡垫上。团雪拿木匙轻轻一碰，叮！小匙被一层光亮的薄冰挡住了。","团雪凑近一看，冰下面还看得见蓝碟上的白纹。他指着窗外说：“昨天的水洼也这样，看得见底下的石头。”","爸爸牵着团雪站在门槛边。“昨夜石面冷，水冻成了薄冰。”那段路有一层亮光，乍看还以为只是湿了。","团雪抱住车把，有点舍不得那条近路。爸爸指了指旁边铺着小碎石的路，父子俩牵着手绕过了冰面。","碎石在车轮下面沙沙响，松果在车里翻了个身。团雪回头看见一片叶子冻在薄冰里，像夹在书页里一样。","回到暖屋，团雪又去看毡垫上的浅碟。等他数完车里的松果，薄冰的边上已经化出了一圈水。","团雪把两只碟子并排推到爸爸面前：“下次换两片叶子试试吧。”他的小木车停在门边，轮子还沾着一颗小碎石。"];
+const page=document.querySelector('#page'), previous=document.querySelector('#prev'), next=document.querySelector('#next'), count=document.querySelector('#count');
+let current=0,start;
+function show(i){
+  current=Math.min(images.length-1,Math.max(0,i));
+  page.src=images[current];
+  page.alt=stories[current];
+  count.textContent=String(current+1)+' / '+images.length;
+  previous.disabled=current===0;
+  next.disabled=current===images.length-1;
+}
+previous.onclick=()=>show(current-1);
+next.onclick=()=>show(current+1);
+document.addEventListener('keydown',event=>{
+  if(event.key==='ArrowRight') show(current+1);
+  if(event.key==='ArrowLeft') show(current-1);
+});
+page.addEventListener('touchstart',event=>start=event.changedTouches[0].clientX,{passive:true});
+page.addEventListener('touchend',event=>{
+  const delta=event.changedTouches[0].clientX-start;
+  if(Math.abs(delta)>45) show(current+(delta<0?1:-1));
+},{passive:true});
+show(0);
+</script></body></html>
