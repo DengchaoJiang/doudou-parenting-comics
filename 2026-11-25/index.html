@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>松壳和掌心里的秘密</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#201812;color:#fff5e6;font:1rem system-ui,sans-serif}
+main{height:100dvh;display:grid;grid-template-rows:minmax(0,1fr) auto;padding:1.5vh 1vw calc(8vh + env(safe-area-inset-bottom));gap:1vh}
+figure{margin:0;min-height:0;display:grid;place-items:center;touch-action:pan-y}
+img{width:100%;height:100%;min-height:0;object-fit:contain}
+nav{display:flex;align-items:center;justify-content:center;gap:1rem}
+button{min-width:5rem;min-height:44px;border:1px solid #b69776;border-radius:.65rem;color:inherit;background:#38291f;font:inherit}
+button:disabled{opacity:.45}
+</style>
+</head>
+<body>
+<main>
+<figure aria-label="松壳和掌心里的秘密"><img id="art" src="page-01.webp" alt="雨刚停，小犰狳松壳抱着红球去院里找朋友。球一蹦，钻进花盆底下，沾了一圈湿土。" draggable="false"></figure>
+<nav aria-label="翻页"><button id="previous" type="button">上一页</button><output id="number" aria-live="polite">第 1 页，共 10 页</output><button id="next" type="button">下一页</button></nav>
+</main>
+<script>
+const pages = ["page-01.webp","page-02.webp","page-03.webp","page-04.webp","page-05.webp","page-06.webp","page-07.webp","page-08.webp","page-09.webp","page-10.webp"];
+const prose = ["雨刚停，小犰狳松壳抱着红球去院里找朋友。球一蹦，钻进花盆底下，沾了一圈湿土。","松壳捡起球，把它递给小骆驼弯月。弯月低头一看，自己的掌心也多了一道泥印。","午饭铃响了。松壳把泥在围裙上一抹，伸手就要拿馒头。弯月抬起爪子说，等一等。","弯月找来一张白纸。松壳把爪子按上去，纸上留下一枚淡淡的印子。他愣住了。","熊妈妈看着那枚印子说，有些病菌小得看不见，也能跟着爪子跑到吃的东西上。","松壳走到水池边，踩上小台阶。他用流水打湿爪子，弯月把黄肥皂推了过来。","松壳抹了肥皂，搓搓掌心，还搓到爪背和指缝。弯月陪他数到二十，泡泡盖住了爪尖。","水冲走了泡泡，也带走了爪子上的许多病菌。松壳擦干爪子，弯月也用肥皂洗了手。","回到桌边，松壳在新纸上又按了一下。这一次，白纸上没有泥印，弯月的眼睛弯成了两条月牙。","这回松壳拿起馒头，掰了一半给弯月。红球在花盆边等他们，馒头还冒着一点热气。"];
+const art = document.querySelector('#art');
+const previous = document.querySelector('#previous');
+const next = document.querySelector('#next');
+const number = document.querySelector('#number');
+let current = 0;
+function show(index) {
+  current = Math.max(0, Math.min(pages.length - 1, index));
+  art.src = pages[current];
+  art.alt = prose[current];
+  number.textContent = '第 ' + (current + 1) + ' 页，共 ' + pages.length + ' 页';
+  previous.disabled = current === 0;
+  next.disabled = current === pages.length - 1;
+  if (!next.disabled) new Image().src = pages[current + 1];
+}
+previous.onclick = () => show(current - 1);
+next.onclick = () => show(current + 1);
+addEventListener('keydown', event => {
+  if (event.key === 'ArrowLeft') show(current - 1);
+  if (event.key === 'ArrowRight') show(current + 1);
+});
+let startX = null;
+art.addEventListener('touchstart', event => { startX = event.changedTouches[0].clientX; }, {passive:true});
+art.addEventListener('touchend', event => {
+  if (startX === null) return;
+  const distance = event.changedTouches[0].clientX - startX;
+  startX = null;
+  if (Math.abs(distance) > 45) show(current + (distance < 0 ? 1 : -1));
+}, {passive:true});
+show(0);
+</script>
+</body>
+</html>
